@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Contact Us — Study Pack Store</title>
+
+<meta name="description" content="Get in touch with Study Pack Store for order support, bulk school orders, returns and general questions.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="assets/css/global.css?v=25">
+
+
+
+<meta property="og:title" content="Contact Us — Study Pack Store">
+
+<meta property="og:description" content="Study Pack Store is Pakistan's premium online bookstore for genuine school, college and university textbooks, eBooks and exam-prep guides with nationwide delivery.">
+
+<meta property="og:type" content="website">
+
+<meta property="og:url" content="https://studypack.taleemihub.com/contact.html">
+
+<meta property="og:image" content="https://studypack.taleemihub.com/assets/images/og-image.jpg">
+
+
+
+<style>
+
+/* ABSOLUTE MOBILE GRID FIX */
+
+@media (max-width: 760px) {
+
+  .shop-product-grid, .product-grid, .ebook-grid {
+
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+
+  }
+
+}
+
+</style>
+
+
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <link rel="stylesheet" href="assets/css/chatbot.css">
+
+  <!-- ================= GOOGLE ANALYTICS 4 & TAG MANAGER ================= -->
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKGDCBNN7Q"></script>
+
+  <script>
+
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag(){dataLayer.push(arguments);}
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-TKGDCBNN7Q', {'send_page_view': true});
+
+    gtag('config', 'AW-5853320780596230');
+
+  </script>
+
+  <!-- Google Tag Manager -->
+
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+
+  })(window,document,'script','dataLayer','GTM-NV7KNKN');</script>
+
+  <!-- End Google Tag Manager -->
+
+
+
+  <!-- ================= ADVANCED ENTITY, GEO & AEO META TAGS ================= -->
+
+  <meta name="author" content="Study Pack by TaleemiHub">
+
+  <meta name="geo.region" content="PK-SD">
+
+  <meta name="geo.placename" content="Karachi, Pakistan">
+
+  <meta name="geo.position" content="24.8607;67.0011">
+
+  <meta name="ICBM" content="24.8607, 67.0011">
+
+  <meta name="keywords" content="Online Books Pakistan, Buy Oxford Books, Oxford Countdown, Cambridge Books Karachi, Beaconhouse Course Books, The Educators Books, School Syllabi Pakistan, Stationery Online Pakistan, Paramount Books, Spectrum Books, Fast Book Delivery Pakistan">
+
+  
+
+  <!-- Open Graph & Social Cards -->
+
+  <meta property="og:site_name" content="Study Pack">
+
+  <meta property="og:type" content="website">
+
+  <meta property="og:locale" content="en_PK">
+
+  <meta property="og:image" content="https://studypack.taleemihub.com/assets/images/studypack_logo.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+
+  <meta name="twitter:site" content="@StudyPackPK">
+
+
+
+  <!-- ================= RICH ENTITY & AEO STRUCTURED DATA (JSON-LD) ================= -->
+
+  <script type="application/ld+json">
+
+  {
+
+    "@context": "https://schema.org",
+
+    "@graph": [
+
+      {
+
+        "@type": "BookStore",
+
+        "@id": "https://studypack.taleemihub.com/#organization",
+
+        "name": "Study Pack",
+
+        "alternateName": ["StudyPack Pakistan", "Study Pack TaleemiHub", "Online School Bookstore"],
+
+        "url": "https://studypack.taleemihub.com",
+
+        "logo": "https://studypack.taleemihub.com/assets/images/studypack_logo.png",
+
+        "image": "https://studypack.taleemihub.com/assets/images/studypack_logo.png",
+
+        "description": "Pakistan leading online educational bookstore for official school syllabi, Oxford University Press, Paramount, Spectrum, Beaconhouse, The Educators, Cambridge O/A levels books, educational toys, and stationery with nationwide Cash on Delivery (COD).",
+
+        "telephone": "+92-333-1310234",
+
+        "email": "info@taleemihub.com",
+
+        "priceRange": "PKR 100 - PKR 15000",
+
+        "paymentAccepted": ["Cash on Delivery", "Bank Transfer", "JazzCash", "EasyPaisa"],
+
+        "currenciesAccepted": "PKR",
+
+        "address": {
+
+          "@type": "PostalAddress",
+
+          "streetAddress": "Karachi, Sindh",
+
+          "addressLocality": "Karachi",
+
+          "addressRegion": "Sindh",
+
+          "postalCode": "75500",
+
+          "addressCountry": "PK"
+
+        }
+
+      },
+
+      {
+
+        "@type": "WebSite",
+
+        "@id": "https://studypack.taleemihub.com/#website",
+
+        "url": "https://studypack.taleemihub.com",
+
+        "name": "Study Pack Online Bookstore",
+
+        "publisher": { "@id": "https://studypack.taleemihub.com/#organization" },
+
+        "potentialAction": {
+
+          "@type": "SearchAction",
+
+          "target": "https://studypack.taleemihub.com/books.html?q={search_term_string}",
+
+          "query-input": "required name=search_term_string"
+
+        }
+
+      },
+
+      {
+
+        "@type": "FAQPage",
+
+        "@id": "https://studypack.taleemihub.com/#faq",
+
+        "mainEntity": [
+
+          {
+
+            "@type": "Question",
+
+            "name": "Where can I buy Oxford and Cambridge school books online in Pakistan?",
+
+            "acceptedAnswer": {
+
+              "@type": "Answer",
+
+              "text": "You can buy genuine Oxford University Press (OUP), Cambridge, Paramount, and Spectrum books directly on Study Pack (studypack.taleemihub.com) with home delivery across Karachi, Lahore, Islamabad, and all cities in Pakistan."
+
+            }
+
+          },
+
+          {
+
+            "@type": "Question",
+
+            "name": "How can I order complete school course packs for Beaconhouse and The Educators?",
+
+            "acceptedAnswer": {
+
+              "@type": "Answer",
+
+              "text": "Study Pack provides complete pre-packaged school course syllabus bundles for Beaconhouse, The Educators, City School, and Foundation Public School. Simply select your school and grade level to order the entire pack in one click."
+
+            }
+
+          },
+
+          {
+
+            "@type": "Question",
+
+            "name": "What is the delivery time and COD policy?",
+
+            "acceptedAnswer": {
+
+              "@type": "Answer",
+
+              "text": "We deliver in 1-2 working days in Karachi and 2-4 working days across Pakistan with Cash on Delivery (COD) available nationwide."
+
+            }
+
+          }
+
+        ]
+
+      }
+
+    ]
+
+  }
+
+  </script>
+
+  <link rel="stylesheet" href="assets/css/whatsapp.css">
+
+
+
+</head>
+
+
+
+<body>
+
+  <!-- Google Tag Manager (noscript) -->
+
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NV7KNKN"
+
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <!-- End Google Tag Manager (noscript) -->
+
+
+
+<!-- Premium Glass Menu -->
+
+<div id="glassMenu" class="glass-menu-overlay">
+
+  <button id="glassCloseBtn" class="glass-close-btn" aria-label="Close Menu" style="position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #111827; z-index: 100; box-shadow: 0 4px 14px rgba(0,0,0,0.15); border: none; cursor: pointer; transition: 0.3s;">
+
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+
+  </button>
+
+  <div class="gm-links">
+
+    <a href="index.html" class="gm-link"><span class="gm-text">Home</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+
+    <a href="courses.html" class="gm-link"><span class="gm-text">Courses</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+
+    <a href="books.html" class="gm-link"><span class="gm-text">Books</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+
+    <a href="stationery.html" class="gm-link"><span class="gm-text">Stationery</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+
+    <a href="toys.html" class="gm-link"><span class="gm-text">Toys &amp; Gifts</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+
+    <a href="express.html" class="gm-link"><span class="gm-text">Express Delivery</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+
+    <a href="contact.html" class="gm-link"><span class="gm-text">Contact</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+
+  </div>
+
+</div>
+
+
+
+<!-- ================= NAVBAR ================= -->
+
+<header class="nav" id="siteNav">
+
+  <div class="container">
+
+    <div class="navbar">
+
+      <a href="index.html" class="logo">
+
+        <img src="assets/images/logo.png" alt="Study Pack Logo" style="height: 38px; width: auto; object-fit: contain;">
+
+        <span>Study Pack</span>
+
+      </a>
+
+      <form class="nav-search-bar">
+
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+
+        <input type="text" placeholder="Search books, stationery, toys...">
+
+        <button type="submit">Search</button>
+
+      </form>
+
+      <nav class="nav-links">
+
+  <a href="index.html#categories">Categories</a><a href="courses.html">Courses</a><a href="books.html">Books</a><a href="stationery.html">Stationery</a><a href="toys.html">Toys</a><a href="express.html">Express</a><a href="why.html">Why Us</a><a href="contact.html" style="background:rgba(0,0,0,0.15);color:var(--gold);box-shadow:inset 0 3px 6px rgba(0,0,0,0.3);">Contact</a>
+
+</nav>
+
+      <div class="nav-actions">
+
+        
+
+        <button class="icon-btn" id="cartBtn" aria-label="Cart" onclick="document.getElementById('cartDrawer').classList.add('show'); document.getElementById('cartOverlay').classList.add('show');">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+
+          <span class="badge-count" id="cartCount">0</span>
+
+        </button>
+
+        <button class="icon-btn top-burger-btn" id="topBurger" aria-label="Menu">
+
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</header>
+
+<!-- ================= PAGE HERO ================= -->
+
+<section class="page-hero">
+
+  <div class="container">
+
+    <div class="breadcrumb reveal"><a href="index.html">Home</a><span class="sep">/</span><span class="cur">Contact</span></div>
+
+    <h1 class="reveal">We are Here to <span class="grad">Help You Out</span></h1>
+
+    <p class="lead reveal">Questions about an order, a bulk school purchase, or a book you cannot find? Reach out — our support team replies within a few hours.</p>
+
+    
+
+  </div>
+
+</section>
+
+
+
+<!-- ================= CONTACT ================= -->
+
+<section class="section grey">
+
+  <div class="container">
+
+    <div class="contact-grid">
+
+      <div class="reveal">
+
+        <div class="info-card">
+
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></span>
+
+          <div><h4>Phone Support</h4><p><a href="tel:+923331310234" style="color:inherit; text-decoration:none; font-weight:700;">+92 333 1310234</a><br>Mon–Sat, 9am – 8pm PKT</p></div>
+
+        </div>
+
+        <div class="info-card">
+
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="M4 6l8 7 8-7"/></svg></span>
+
+          <div><h4>Email</h4><p><a href="mailto:info@taleemihub.com" style="color:inherit; text-decoration:none; font-weight:600;">info@taleemihub.com</a><br><a href="mailto:taleemihub2020@gmail.com" style="color:inherit; text-decoration:none; font-weight:600;">taleemihub2020@gmail.com</a></p></div>
+
+        </div>
+
+        <div class="info-card">
+
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 10c0 6-9 12-9 12s-9-6-9-12a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+
+          <div><h4>Head Office</h4><p>North Nazimabad - Karachi<br>Sindh, Pakistan</p></div>
+
+        </div>
+
+        <div class="social-block">
+
+          <h4>Follow Study Pack</h4>
+
+          <div class="soc-row" style="justify-content:center;">
+
+            <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+
+            <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+
+            <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/></svg></a>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+
+      <div class="reveal">
+
+        <div class="contact-form-card">
+
+          <h3>Send Us a Message</h3>
+
+          <p>Fill in the form and our team will get back to you shortly.</p>
+
+          <form id="contactForm" onsubmit="event.preventDefault(); showToast('Message sent! We will reply within 2 hours.'); this.reset();">
+
+            <div class="form-row">
+
+              <div class="form-field"><label>Full Name</label><input type="text" placeholder="Your name" required></div>
+
+              <div class="form-field"><label>Email Address</label><input type="email" placeholder="you@email.com" required></div>
+
+            </div>
+
+            <div class="form-row">
+
+              <div class="form-field"><label>Phone Number</label><input type="tel" placeholder="+92 3XX XXXXXXX"></div>
+
+              <div class="form-field">
+
+                <label>Subject</label>
+
+                <select required>
+
+                  <option value="">Select a topic</option>
+
+                  <option>Order Status</option>
+
+                  <option>Bulk / School Order</option>
+
+                  <option>Returns &amp; Refunds</option>
+
+                  <option>Book Request</option>
+
+                  <option>Other</option>
+
+                </select>
+
+              </div>
+
+            </div>
+
+            <div class="form-row">
+
+              <div class="form-field full"><label>Message</label><textarea placeholder="How can we help?" required></textarea></div>
+
+            </div>
+
+            <button type="submit" class="btn-submit">Send Message</button>
+
+          </form>
+
+        </div>
+
+        <div style="margin-top:22px;">
+
+          <div class="map-wrap">
+
+            <div class="grid-lines"></div>
+
+            <div class="pin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg></div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ================= FAQ ================= -->
+
+<section class="section" id="faq">
+
+  <div class="container">
+
+    <div class="sec-head reveal" style="justify-content:center; text-align:center; flex-direction:column; align-items:center;">
+
+      <span class="eyebrow">FAQs</span>
+
+      <h2>Common Questions</h2>
+
+    </div>
+
+    <div class="faq-list reveal" id="faqList">
+
+      <div class="faq-item">
+
+        <div class="faq-q">How long does delivery take? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></div>
+
+        <div class="faq-a"><p>Most orders arrive within 24–48 hours in major cities, and 3–5 days for other locations nationwide.</p></div>
+
+      </div>
+
+      <div class="faq-item">
+
+        <div class="faq-q">Can I return a damaged or wrong book? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></div>
+
+        <div class="faq-a"><p>Yes — we offer a 7-day hassle-free return window on any damaged, defective or incorrectly shipped item.</p></div>
+
+      </div>
+
+      <div class="faq-item">
+
+        <div class="faq-q">Do you offer discounts for schools ordering in bulk? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></div>
+
+        <div class="faq-a"><p>Yes, schools ordering 50+ copies of a title qualify for special bulk pricing. Contact us for a custom quote.</p></div>
+
+      </div>
+
+      <div class="faq-item">
+
+        <div class="faq-q">How do eBook downloads work? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M6 9l6 6 6-6"/></svg></div>
+
+        <div class="faq-a"><p>After checkout, your eBook is available instantly in your account and through the Study Pack Reader app, with lifetime access.</p></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ================= NEWSLETTER ================= -->
+
+<section class="section">
+
+  <div class="container">
+
+    <div class="newsletter reveal">
+
+      <h3>Get Notified on New Arrivals &amp; Flash Sales</h3>
+
+      <p>One email a week. Grade-wise deals, no spam.</p>
+
+      <form class="nl-form" onsubmit="event.preventDefault(); showToast('Subscribed! Check your inbox.');">
+
+        <input type="email" placeholder="you@email.com" required>
+
+        <button type="submit">Subscribe</button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</section>
+
+
+
+<!-- ================= FOOTER ================= -->
+
+<footer id="footer">
+
+  <div class="container">
+
+    <div class="foot-grid">
+
+      <div class="foot-about">
+
+        <a href="index.html" class="logo">
+
+          <img src="assets/images/logo.png" alt="Study Pack Logo" style="height: 38px; width: auto; object-fit: contain;">
+
+          <span>Study Pack</span>
+
+        </a>
+
+        <p>Pakistan's premium online bookstore for school, college and university students — genuine books, fast delivery.</p>
+
+        <div class="soc-row">
+
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/></svg></a>
+
+        </div>
+
+      </div>
+
+      <div><h5>Shop</h5><ul><li><a href="books.html">School Books</a></li><li><a href="books.html">College Books</a></li><li><a href="books.html">University Books</a></li><li></li><li><a href="books.html">Stationery Kits</a></li></ul></div>
+
+      <div><h5>Categories</h5><ul><li><a href="books.html">Cambridge</a></li><li><a href="books.html">Matric / FSC</a></li><li><a href="books.html">O &amp; A Level</a></li><li><a href="books.html">Competitive Exams</a></li><li><a href="books.html">Islamic Studies</a></li></ul></div>
+
+      <div><h5>Support</h5><ul><li><a href="contact.html">Contact Us</a></li><li><a href="contact.html#faq">FAQs</a></li><li><a href="contact.html">Shipping Policy</a></li><li><a href="contact.html">Return Policy</a></li><li><a href="contact.html">Track Order</a></li></ul></div>
+
+      <div><h5>Company</h5><ul><li><a href="why.html">About Us</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms &amp; Conditions</a></li><li><a href="why.html#team">Careers</a></li></ul></div>
+
+    </div>
+
+    <div class="foot-bottom">
+
+      <span>© 2026 Study Pack Store. All rights reserved.</span>
+
+      <div class="pay-icons"><span>Visa</span><span>JazzCash</span><span>EasyPaisa</span><span>COD</span><span>PayPal</span></div>
+
+    </div>
+
+  </div>
+
+</footer>
+
+<!-- ================= CART DRAWER ================= -->
+
+<div class="cart-overlay" id="cartOverlay"></div>
+
+<aside class="cart-drawer" id="cartDrawer">
+
+  <div class="cart-head">
+
+    <h3>Your Cart</h3>
+
+    <button class="icon-btn" id="closeCart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+
+  </div>
+
+  <div class="cart-items" id="cartItems">
+
+    <div class="cart-empty" id="cartEmpty">
+
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+
+      <p>Your cart is empty. Start adding books!</p>
+
+    </div>
+
+  </div>
+
+  <div class="cart-foot">
+
+    <div class="coupon-row">
+
+      <input type="text" placeholder="Coupon code">
+
+      <button onclick="showToast('Coupon applied!')">Apply</button>
+
+    </div>
+
+    <div class="sum-row"><span>Subtotal</span><span id="sumSub">Rs 0</span></div>
+
+    <div class="sum-row"><span>Delivery</span><span id="sumShip">Rs 0</span></div>
+
+    <div class="sum-row total"><span>Total</span><span id="sumTotal">Rs 0</span></div>
+
+    <button class="btn-checkout" onclick="window.location.href='checkout.html'">Proceed to Checkout</button>
+
+  </div>
+
+</aside>
+
+
+
+<!-- ================= QUICK VIEW MODAL ================= -->
+
+<div class="modal-overlay" id="qvOverlay">
+
+  <div class="qv-modal" id="qvModal"></div>
+
+</div>
+
+
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><span id="toastMsg">Added to cart</span></div>
+
+<script src="assets/js/main.js?v=10??v=4"></script>
+
+<script src="assets/js/store.js??v=4"></script>
+
+
+
+<script>
+
+
+
+/* ============ CONTACT.HTML — FAQ accordion ============ */
+
+document.querySelectorAll('.faq-q').forEach(q=>{
+
+  q.addEventListener('click', function(){
+
+    const item = this.parentElement;
+
+    const wasOpen = item.classList.contains('open');
+
+    document.querySelectorAll('.faq-item').forEach(f=>f.classList.remove('open'));
+
+    if(!wasOpen) item.classList.add('open');
+
+  });
+
+});
+
+
+
+</script>
+
+
+
+<!-- Mobile Nav JS -->
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function() {
+
+  const topBurger = document.getElementById("topBurger");
+
+  const glassMenu = document.getElementById("glassMenu");
+
+  const glassCloseBtn = document.getElementById("glassCloseBtn");
+
+  
+
+  if(topBurger && glassMenu) {
+
+    const burgerIcon = topBurger.querySelector("svg");
+
+    let menuOpen = false;
+
+
+
+    function closeMenu() {
+
+      menuOpen = false;
+
+      glassMenu.classList.remove("open");
+
+      burgerIcon.innerHTML = '<path d="M3 12h18M3 6h18M3 18h18"/>';
+
+    }
+
+
+
+    function openMenu() {
+
+      menuOpen = true;
+
+      glassMenu.classList.add("open");
+
+      burgerIcon.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
+
+    }
+
+
+
+    topBurger.addEventListener("click", function(e) {
+
+      createRipple(e, topBurger);
+
+      if(menuOpen) closeMenu();
+
+      else openMenu();
+
+    });
+
+
+
+    if(glassCloseBtn) {
+
+      glassCloseBtn.addEventListener("click", function(e) {
+
+        createRipple(e, glassCloseBtn);
+
+        closeMenu();
+
+      });
+
+    }
+
+  }
+
+
+
+  const gmLinks = document.querySelectorAll(".gm-link");
+
+  gmLinks.forEach(link => {
+
+    link.addEventListener("click", function(e) {
+
+      createRipple(e, link);
+
+    });
+
+  });
+
+
+
+  function createRipple(event, element) {
+
+    const circle = document.createElement("span");
+
+    const diameter = Math.max(element.clientWidth, element.clientHeight);
+
+    const radius = diameter / 2;
+
+    circle.style.width = circle.style.height = `${diameter}px`;
+
+    
+
+    const rect = element.getBoundingClientRect();
+
+    const x = event.clientX - rect.left - radius;
+
+    const y = event.clientY - rect.top - radius;
+
+    
+
+    circle.style.left = `${x}px`;
+
+    circle.style.top = `${y}px`;
+
+    circle.classList.add("ripple");
+
+    
+
+    const existing = element.querySelector(".ripple");
+
+    if(existing) existing.remove();
+
+    
+
+    element.appendChild(circle);
+
+  }
+
+});
+
+</script>
+
+\n<script src="assets/js/search_logic.js"></script>\n  <script src="assets/js/chatbot.js" defer></script>
+
+  <script src="assets/js/whatsapp.js" defer></script>
+
+</body>
+
+</html>

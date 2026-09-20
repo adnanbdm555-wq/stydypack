@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Primary Meta Tags -->
+  <title>Secure Checkout — Study Pack Store</title>
+  <meta name="title" content="Secure Checkout — Study Pack Store">
+  <meta name="description" content="Fast and secure checkout for your Study Pack order with Cash on Delivery and online payment options across Pakistan.">
+  <meta name="keywords" content="checkout, order books online, cash on delivery bookstore">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="googlebot" content="noindex, nofollow">
+  <meta name="author" content="Study Pack Store">
+  <meta name="publisher" content="Study Pack Store - Taleemi Hub">
+  <link rel="canonical" href="https://studypack.taleemihub.com/checkout.html">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_PK">
+  <meta property="og:site_name" content="Study Pack Store">
+  <meta property="og:url" content="https://studypack.taleemihub.com/checkout.html">
+  <meta property="og:title" content="Secure Checkout — Study Pack Store">
+  <meta property="og:description" content="Fast and secure checkout for your Study Pack order with Cash on Delivery and online payment options across Pakistan.">
+  <meta property="og:image" content="https://studypack.taleemihub.com/assets/images/studypack_logo.png">
+
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://studypack.taleemihub.com/checkout.html">
+  <meta name="twitter:title" content="Secure Checkout — Study Pack Store">
+  <meta name="twitter:description" content="Fast and secure checkout for your Study Pack order with Cash on Delivery and online payment options across Pakistan.">
+  <meta name="twitter:image" content="https://studypack.taleemihub.com/assets/images/studypack_logo.png">
+
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/global.css?v=25">
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<style>
+/* ABSOLUTE MOBILE GRID FIX */
+@media (max-width: 760px) {
+  .shop-product-grid, .product-grid, .ebook-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  }
+}
+</style>
+  <link rel="stylesheet" href="assets/css/chatbot.css">
+  <!-- ================= GOOGLE ANALYTICS 4 & TAG MANAGER ================= -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKGDCBNN7Q"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TKGDCBNN7Q', {'send_page_view': true});
+    gtag('config', 'AW-5853320780596230');
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-NV7KNKN');</script>
+  <!-- End Google Tag Manager -->
+
+  <!-- ================= ADVANCED ENTITY, GEO & AEO META TAGS ================= -->
+  
+  <meta name="geo.region" content="PK-SD">
+  <meta name="geo.placename" content="Karachi, Pakistan">
+  <meta name="geo.position" content="24.8607;67.0011">
+  <meta name="ICBM" content="24.8607, 67.0011">
+
+  <!-- Open Graph & Social Cards -->
+
+  <!-- ================= RICH ENTITY & AEO STRUCTURED DATA (JSON-LD) ================= -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BookStore",
+        "@id": "https://studypack.taleemihub.com/#organization",
+        "name": "Study Pack",
+        "alternateName": ["StudyPack Pakistan", "Study Pack TaleemiHub", "Online School Bookstore"],
+        "url": "https://studypack.taleemihub.com",
+        "logo": "https://studypack.taleemihub.com/assets/images/studypack_logo.png",
+        "image": "https://studypack.taleemihub.com/assets/images/studypack_logo.png",
+        "description": "Pakistan leading online educational bookstore for official school syllabi, Oxford University Press, Paramount, Spectrum, Beaconhouse, The Educators, Cambridge O/A levels books, educational toys, and stationery with nationwide Cash on Delivery (COD).",
+        "telephone": "+92-333-1310234",
+        "email": "info@taleemihub.com",
+        "priceRange": "PKR 100 - PKR 15000",
+        "paymentAccepted": ["Cash on Delivery", "Bank Transfer", "JazzCash", "EasyPaisa"],
+        "currenciesAccepted": "PKR",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Karachi, Sindh",
+          "addressLocality": "Karachi",
+          "addressRegion": "Sindh",
+          "postalCode": "75500",
+          "addressCountry": "PK"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://studypack.taleemihub.com/#website",
+        "url": "https://studypack.taleemihub.com",
+        "name": "Study Pack Online Bookstore",
+        "publisher": { "@id": "https://studypack.taleemihub.com/#organization" },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://studypack.taleemihub.com/books.html?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://studypack.taleemihub.com/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Where can I buy Oxford and Cambridge school books online in Pakistan?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "You can buy genuine Oxford University Press (OUP), Cambridge, Paramount, and Spectrum books directly on Study Pack (studypack.taleemihub.com) with home delivery across Karachi, Lahore, Islamabad, and all cities in Pakistan."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How can I order complete school course packs for Beaconhouse and The Educators?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Study Pack provides complete pre-packaged school course syllabus bundles for Beaconhouse, The Educators, City School, and Foundation Public School. Simply select your school and grade level to order the entire pack in one click."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the delivery time and COD policy?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "We deliver in 1-2 working days in Karachi and 2-4 working days across Pakistan with Cash on Delivery (COD) available nationwide."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="assets/css/whatsapp.css">
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NV7KNKN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+<!-- Premium Glass Menu -->
+<div id="glassMenu" class="glass-menu-overlay">
+  <button id="glassCloseBtn" class="glass-close-btn" aria-label="Close Menu" style="position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #111827; z-index: 100; box-shadow: 0 4px 14px rgba(0,0,0,0.15); border: none; cursor: pointer; transition: 0.3s;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+  <div class="gm-links">
+    <a href="/" class="gm-link"><span class="gm-text">Home</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <a href="/books" class="gm-link"><span class="gm-text">Books</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <a href="/stationery" class="gm-link"><span class="gm-text">Stationery</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <a href="/toys" class="gm-link"><span class="gm-text">Toys &amp; Gifts</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <a href="/express" class="gm-link"><span class="gm-text">Express Delivery</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <a href="/contact" class="gm-link"><span class="gm-text">Contact</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+  </div>
+</div>
+
+<!-- ================= NAVBAR ================= -->
+<header class="nav" id="siteNav">
+  <div class="container">
+    <div class="navbar">
+      <a href="/" class="logo">
+        <img src="assets/images/logo.png" alt="Study Pack Logo" style="height: 38px; width: auto; object-fit: contain;">
+        <span>Study Pack</span>
+      </a>
+      <form class="nav-search-bar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" placeholder="Search books, stationery, toys...">
+        <button type="submit">Search</button>
+      </form>
+      <nav class="nav-links">
+  <a href="index.html#categories">Categories</a><a href="/books">Books</a><a href="/stationery">Stationery</a><a href="/toys">Toys</a><a href="/express">Express</a><a href="/why">Why Us</a><a href="/contact">Contact</a>
+</nav>
+      <div class="nav-actions">
+        
+        <button class="icon-btn" id="cartBtn" aria-label="Cart" onclick="document.getElementById('cartDrawer').classList.add('show'); document.getElementById('cartOverlay').classList.add('show');">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          <span class="badge-count" id="cartCount">0</span>
+        </button>
+        <button class="icon-btn top-burger-btn" id="topBurger" aria-label="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= PAGE HERO ================= -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb reveal"><a href="/">Home</a><span class="sep">/</span><a href="/books">Cart</a><span class="sep">/</span><span class="cur">Checkout</span></div>
+    <h1 class="reveal">Secure <span class="grad">Checkout</span></h1>
+    <p class="lead reveal">Almost there — confirm your delivery details and payment method to complete your order.</p>
+  </div>
+</section>
+
+<!-- ================= CHECKOUT ================= -->
+<section class="section grey" style="padding-top:44px;">
+  <div class="container">
+
+    <div id="checkoutEmptyState" class="checkout-empty" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+      <h3>Your cart is empty</h3>
+      <p>Add a few books before heading to checkout.</p>
+      <a href="/books" class="btn-primary" style="background:var(--grad-brand); color:#fff;">Browse Books</a>
+    </div>
+
+    <div id="checkoutContent" class="checkout-layout">
+      <!-- LEFT: FORM -->
+      <div>
+        <form id="checkoutForm" onsubmit="return placeOrder(event)">
+          <div class="checkout-card reveal">
+            <h3><span class="num">1</span> Delivery Details</h3>
+            <p class="sub">Where should we send your order?</p>
+            <div class="form-row" class="co-indented">
+              <div class="form-field"><label>Full Name</label><input type="text" id="coName" placeholder="Your name" required></div>
+              <div class="form-field"><label>Phone Number</label><input type="tel" id="coPhone" placeholder="+92 3XX XXXXXXX" required></div>
+            </div>
+            <div class="form-row" class="co-indented">
+              <div class="form-field full"><label>Email Address</label><input type="email" id="coEmail" placeholder="you@email.com" required></div>
+            </div>
+            <div class="form-row" class="co-indented">
+              <div class="form-field full"><label>Street Address</label><input type="text" id="coAddress" placeholder="House #, street, area" required></div>
+            </div>
+            <div class="form-row" class="co-indented">
+              <div class="form-field"><label>City</label><input type="text" id="coCity" placeholder="e.g. Karachi" required></div>
+              <div class="form-field">
+                <label>Province</label>
+                <select id="coProvince" required>
+                  <option value="">Select province</option>
+                  <option>Sindh</option>
+                  <option>Punjab</option>
+                  <option>Khyber Pakhtunkhwa</option>
+                  <option>Balochistan</option>
+                  <option>Islamabad Capital Territory</option>
+                  <option>Gilgit-Baltistan</option>
+                  <option>Azad Kashmir</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row" class="co-indented">
+              <div class="form-field full"><label>Order Notes (optional)</label><input type="text" id="coNotes" placeholder="Delivery instructions, landmark, etc."></div>
+            </div>
+          </div>
+
+          <div class="checkout-card reveal">
+            <h3><span class="num">2</span> Payment Method</h3>
+            <p class="sub">Choose how you'd like to pay.</p>
+            <div class="pay-grid">
+              <label class="pay-opt checked" data-val="cod">
+                <input type="radio" name="payMethod" value="cod" checked>
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></span>
+                <span class="lbl"><b>Cash on Delivery</b><span>Pay when it arrives</span></span>
+                <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
+              </label>
+              <label class="pay-opt" data-val="jazzcash">
+                <input type="radio" name="payMethod" value="jazzcash">
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+                <span class="lbl"><b>JazzCash</b><span>Mobile wallet</span></span>
+                <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
+              </label>
+              <label class="pay-opt" data-val="easypaisa">
+                <input type="radio" name="payMethod" value="easypaisa">
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+                <span class="lbl"><b>EasyPaisa</b><span>Mobile wallet</span></span>
+                <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
+              </label>
+              <label class="pay-opt" data-val="card">
+                <input type="radio" name="payMethod" value="card">
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg></span>
+                <span class="lbl"><b>Credit / Debit Card</b><span>Visa, Mastercard</span></span>
+                <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
+              </label>
+            </div>
+            <div class="form-row" id="walletFields" class="co-indented" style="margin-top:18px; display:none;">
+              <div class="form-field full"><label>Account Number / Mobile No.</label><input type="text" id="payWalletNo" placeholder="03XX-XXXXXXX" inputmode="numeric"></div>
+            </div>
+            <div class="form-row" id="cardFields" class="co-indented" style="margin-top:18px; display:none;">
+              <div class="form-field full"><label>Card Number</label><input type="text" id="payCardNo" placeholder="1234 5678 9012 3456" inputmode="numeric" maxlength="19"></div>
+              <div class="form-field"><label>Expiry</label><input type="text" placeholder="MM/YY" maxlength="5"></div>
+              <div class="form-field"><label>CVV</label><input type="text" placeholder="123" maxlength="3" inputmode="numeric"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- RIGHT: ORDER SUMMARY -->
+      <aside class="order-summary reveal">
+        <h3>Order Summary</h3>
+        <div class="oi-list" id="oiList"></div>
+        <div class="coupon-row" style="margin-bottom:16px;">
+          <input type="text" placeholder="Coupon code">
+          <button type="button" onclick="showToast('Coupon applied!')">Apply</button>
+        </div>
+        <div class="sum-row"><span>Subtotal (Books)</span><span id="coSub">Rs 0</span></div>
+        <div class="sum-row"><span>Delivery Charges</span><span id="coShip" style="color:var(--blue); font-weight:600;">Weight ke mutabiq</span></div>
+        <div class="sum-row" id="coFeeRow" style="display:flex;">
+          <span id="coFeeLabel">COD Handling Fee (4%)</span>
+          <span id="coFeeValue" style="color:var(--muted); font-size:0.9em;">Invoice par add hogi</span>
+        </div>
+        <div class="sum-row total"><span>Estimated Total</span><span id="coTotal">Rs 0</span></div>
+        <div id="coNoticeBox" style="margin-top:12px; padding:12px; border-radius:10px; background:rgba(21,101,192,0.06); border:1px dashed var(--blue); font-size:12.5px; line-height:1.5; color:#1e293b;">
+          <strong>📦 Delivery &amp; COD Notice:</strong> Books ka actual weight pack karne ke baad confirm hota hai. Exact courier charges aur 4% COD fee final bill mein add kar ke WhatsApp par confirm kiye jayenge.
+        </div>
+        <button type="submit" form="checkoutForm" class="btn-checkout" id="placeOrderBtn">Place Order</button>
+        <div class="hero-badges" style="margin-top:18px; justify-content:center;">
+          <div class="mini-badge" style="color:var(--muted);"><span class="ic" style="background:rgba(21,101,192,.08);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" width="15" height="15"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg></span> Secure &amp; Encrypted</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="footer">
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-about">
+        <a href="/" class="logo">
+          <img src="assets/images/logo.png" alt="Study Pack Logo" style="height: 38px; width: auto; object-fit: contain;">
+          <span>Study Pack</span>
+        </a>
+        <p>Pakistan's premium online bookstore for school, college and university students — genuine books, fast delivery.</p>
+        <div class="soc-row">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/></svg></a>
+        </div>
+      </div>
+      <div><h5>Shop</h5><ul><li><a href="/books">School Books</a></li><li><a href="/books">College Books</a></li><li><a href="/books">University Books</a></li><li></li><li><a href="/books">Stationery Kits</a></li></ul></div>
+      <div><h5>Categories</h5><ul><li><a href="/books">Cambridge</a></li><li><a href="/books">Matric / FSC</a></li><li><a href="/books">O &amp; A Level</a></li><li><a href="/books">Competitive Exams</a></li><li><a href="/books">Islamic Studies</a></li></ul></div>
+      <div><h5>Support</h5><ul><li><a href="/contact">Contact Us</a></li><li><a href="contact.html#faq">FAQs</a></li><li><a href="/contact">Shipping Policy</a></li><li><a href="/contact">Return Policy</a></li><li><a href="/contact">Track Order</a></li></ul></div>
+      <div><h5>Company</h5><ul><li><a href="/why">About Us</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms &amp; Conditions</a></li><li><a href="why.html#team">Careers</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Study Pack Store. All rights reserved.</span>
+      <div class="pay-icons"><span>Visa</span><span>JazzCash</span><span>EasyPaisa</span><span>COD</span><span>PayPal</span></div>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= CART DRAWER ================= -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h3>Your Cart</h3>
+    <button class="icon-btn" id="closeCart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+      <p>Your cart is empty. Start adding books!</p>
+    </div>
+  </div>
+  <div class="cart-foot">
+    <div class="coupon-row">
+      <input type="text" placeholder="Coupon code">
+      <button onclick="showToast('Coupon applied!')">Apply</button>
+    </div>
+    <div class="sum-row"><span>Subtotal</span><span id="sumSub">Rs 0</span></div>
+    <div class="sum-row"><span>Delivery</span><span id="sumShip">Rs 0</span></div>
+    <div class="sum-row total"><span>Total</span><span id="sumTotal">Rs 0</span></div>
+    <button class="btn-checkout" onclick="window.location.href='checkout.html'">Proceed to Checkout</button>
+  </div>
+</aside>
+
+<!-- ================= QUICK VIEW MODAL ================= -->
+<div class="modal-overlay" id="qvOverlay">
+  <div class="qv-modal" id="qvModal"></div>
+</div>
+
+<!-- ================= SUCCESS MODAL ================= -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-modal">
+    <div class="success-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <h3>Order Placed Successfully!</h3>
+    <p>Thank you — a confirmation has been sent to your email.</p>
+    <div class="oid" id="orderIdDisplay">Order #EB-000000</div>
+    <div class="success-actions">
+      <a href="/" class="btn-outline" style="border-color:var(--blue); color:var(--blue);">Back to Home</a>
+      <a href="/books" class="btn-primary" style="background:var(--grad-brand); color:#fff;">Continue Shopping</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================= UPSELL 3D CAROUSEL MODAL ================= -->
+<div class="modal-overlay" id="upsellOverlay">
+  <div class="upsell-modal-box">
+    <button class="modal-close" onclick="closeUpsellModal()" aria-label="Close modal">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    </button>
+    
+    <div class="upsell-header">
+      <span class="upsell-badge">✨ Exclusive Add-ons</span>
+      <h2>Before You Checkout!</h2>
+      <p>Complete your Study Pack with top-rated Stationery &amp; Fun Educational Toys.</p>
+      
+      <!-- Category Filter Tabs -->
+      <div class="upsell-tabs">
+        <button class="upsell-tab active" onclick="switchUpsellCategory('all', this)">🌟 All Featured</button>
+        <button class="upsell-tab" onclick="switchUpsellCategory('toys', this)">🧸 Toys &amp; Games</button>
+        <button class="upsell-tab" onclick="switchUpsellCategory('stationery', this)">✏️ Stationery</button>
+      </div>
+    </div>
+    
+    <!-- 3D Carousel Stage -->
+    <div class="upsell-carousel-container" id="upsellCarouselStage">
+      <button class="carousel-nav-btn prev" onclick="moveUpsellSlide(-1, true)" aria-label="Previous">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+
+      <div class="upsell-carousel-track" id="upsellTrack">
+        <!-- 3D Cards will be dynamically injected here -->
+      </div>
+
+      <button class="carousel-nav-btn next" onclick="moveUpsellSlide(1, true)" aria-label="Next">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+
+    <!-- Carousel Dots -->
+    <div class="upsell-dots" id="upsellDots"></div>
+    
+    <!-- Footer Quick Actions -->
+    <div class="upsell-footer-actions">
+      <a href="/toys" target="_blank" class="upsell-cat-btn toys">
+        <span>🧸 Explore All Toys (90+)</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="/stationery" target="_blank" class="upsell-cat-btn stat">
+        <span>✏️ Explore All Stationery (250+)</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <button class="upsell-continue-btn" onclick="closeUpsellModal()">
+        Continue to Checkout →
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+/* ================= UPSELL 3D CAROUSEL STYLES ================= */
+#upsellOverlay.modal-overlay {
+  z-index: 1000002 !important;
+}
+.upsell-modal-box {
+  background: #ffffff;
+  border-radius: 24px;
+  width: 95%;
+  max-width: 680px;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 32px 28px 24px;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(15, 23, 42, 0.05);
+  position: relative;
+  text-align: center;
+  animation: modalPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+@keyframes modalPopIn {
+  from { opacity: 0; transform: scale(0.92) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+.upsell-header .upsell-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, rgba(255, 111, 0, 0.12), rgba(245, 158, 11, 0.15));
+  color: #c94e00;
+  font-size: 11.5px;
+  font-weight: 800;
+  padding: 4px 12px;
+  border-radius: 99px;
+  margin-bottom: 8px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.upsell-header h2 {
+  font-size: clamp(22px, 4vw, 28px);
+  font-weight: 800;
+  color: #0F172A;
+  margin-bottom: 6px;
+}
+.upsell-header p {
+  color: #64748B;
+  font-size: 13.5px;
+  margin-bottom: 16px;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.upsell-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.upsell-tab {
+  background: #F1F5F9;
+  color: #475569;
+  border: 1px solid #E2E8F0;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.upsell-tab.active, .upsell-tab:hover {
+  background: #0F172A;
+  color: #ffffff;
+  border-color: #0F172A;
+}
+
+/* 3D Carousel Stage */
+.upsell-carousel-container {
+  position: relative;
+  width: 100%;
+  height: 270px;
+  margin: 10px 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+  overflow: hidden;
+}
+.upsell-carousel-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform-style: preserve-3d;
+}
+.upsell-card-3d {
+  position: absolute;
+  width: 210px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+  padding: 14px;
+  text-align: center;
+  transition: all 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.upsell-card-3d.active {
+  transform: translate3d(0, 0, 80px) scale(1.05);
+  z-index: 5;
+  opacity: 1;
+  border-color: #1565C0;
+  box-shadow: 0 20px 40px rgba(21, 101, 192, 0.22);
+}
+.upsell-card-3d.prev-card {
+  transform: translate3d(-170px, 0, -50px) rotateY(22deg) scale(0.85);
+  z-index: 3;
+  opacity: 0.75;
+}
+.upsell-card-3d.next-card {
+  transform: translate3d(170px, 0, -50px) rotateY(-22deg) scale(0.85);
+  z-index: 3;
+  opacity: 0.75;
+}
+.upsell-card-3d.hidden-card {
+  transform: translate3d(0, 0, -150px) scale(0.6);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.upsell-card-img {
+  width: 100%;
+  height: 110px;
+  object-fit: contain;
+  background: #F8FAFC;
+  border-radius: 10px;
+  padding: 6px;
+  margin-bottom: 8px;
+}
+.upsell-card-cat {
+  font-size: 10px;
+  font-weight: 800;
+  color: #1565C0;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  margin-bottom: 2px;
+}
+.upsell-card-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #0F172A;
+  line-height: 1.25;
+  height: 32px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  margin-bottom: 6px;
+}
+.upsell-card-price {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: #c94e00;
+  margin-bottom: 8px;
+}
+.upsell-add-btn {
+  background: linear-gradient(135deg, #1565C0, #0B132B);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 11.5px;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  transition: transform 0.2s ease, background 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+.upsell-add-btn:hover {
+  transform: scale(1.03);
+}
+.upsell-add-btn.added {
+  background: #10B981 !important;
+}
+
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #0F172A;
+  border: 1px solid #CBD5E1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+  transition: all 0.2s ease;
+}
+.carousel-nav-btn:hover {
+  background: #0F172A;
+  color: #ffffff;
+  border-color: #0F172A;
+}
+.carousel-nav-btn.prev { left: 8px; }
+.carousel-nav-btn.next { right: 8px; }
+.carousel-nav-btn svg { width: 18px; height: 18px; }
+
+.upsell-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.upsell-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #CBD5E1;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+.upsell-dot.active {
+  width: 22px;
+  border-radius: 6px;
+  background: #1565C0;
+}
+
+.upsell-footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+}
+.upsell-cat-btn {
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+.upsell-cat-btn.toys {
+  background: linear-gradient(135deg, #FF6F00, #E65100);
+  color: #ffffff;
+}
+.upsell-cat-btn.stat {
+  background: #0F172A;
+  color: #ffffff;
+}
+.upsell-cat-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+}
+.upsell-cat-btn svg {
+  width: 14px;
+  height: 14px;
+}
+.upsell-continue-btn {
+  background: transparent;
+  border: 1.5px solid #CBD5E1;
+  color: #475569;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.upsell-continue-btn:hover {
+  border-color: #0F172A;
+  color: #0F172A;
+}
+
+@media (max-width: 600px) {
+  .upsell-modal-box { padding: 24px 16px 20px; }
+  .upsell-carousel-container { height: 260px; }
+  .upsell-card-3d { width: 175px; padding: 10px; }
+  .upsell-card-3d.prev-card { transform: translate3d(-120px, 0, -40px) rotateY(20deg) scale(0.82); }
+  .upsell-card-3d.next-card { transform: translate3d(120px, 0, -40px) rotateY(-20deg) scale(0.82); }
+  .upsell-footer-actions { flex-direction: column; width: 100%; }
+  .upsell-cat-btn, .upsell-continue-btn { width: 100%; justify-content: center; }
+}
+</style>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><span id="toastMsg">Added to cart</span></div>
+<script src="assets/js/scraped-toys.js"></script>
+<script src="assets/js/scraped-stationery.js"></script>
+<script src="assets/js/wc-api.js"></script>
+<script src="assets/js/main.js?v=10"></script>
+<script src="assets/js/store.js?v=25"></script>
+
+<script>
+/* ============ CHECKOUT.HTML — order summary, payment selection, place order ============ */
+function renderCheckoutSummary(){
+  const content = document.getElementById('checkoutContent');
+  const empty = document.getElementById('checkoutEmptyState');
+  if(cart.length===0){
+    content.style.display='none';
+    empty.style.display='block';
+    return;
+  }
+  content.style.display='';
+  empty.style.display='none';
+
+  const oiList = document.getElementById('oiList');
+  oiList.innerHTML = cart.map(c => `
+    <div class="oi-item">
+      <div class="oi-cover" style="background:${c.img ? `url('${c.img}') center/cover no-repeat` : c.grad}"></div>
+      <div class="oi-info">
+        <div class="n">${c.title}</div>
+        <div class="m">Qty ${c.qty} · ${c.cls}</div>
+      </div>
+      <div class="oi-price">${money(c.price*c.qty)}</div>
+    </div>
+  `).join('');
+
+  const sub = cart.reduce((s,c)=>s+c.price*c.qty,0);
+  document.getElementById('coSub').textContent = money(sub);
+  document.getElementById('coShip').textContent = 'As per Weight / Distance';
+  document.getElementById('coTotal').textContent = money(sub) + ' (+ Delivery)';
+}
+
+/* Payment method selection */
+document.querySelectorAll('.pay-opt').forEach(opt=>{
+  opt.addEventListener('click', function(){
+    document.querySelectorAll('.pay-opt').forEach(o=>o.classList.remove('checked'));
+    this.classList.add('checked');
+    this.querySelector('input').checked = true;
+    const val = this.dataset.val;
+    document.getElementById('cardFields').style.display = val === 'card' ? 'grid' : 'none';
+    document.getElementById('walletFields').style.display = (val === 'jazzcash' || val === 'easypaisa') ? 'grid' : 'none';
+
+    const feeLabel = document.getElementById('coFeeLabel');
+    const feeValue = document.getElementById('coFeeValue');
+    const noticeBox = document.getElementById('coNoticeBox');
+
+    if(val === 'cod'){
+      if(feeLabel) feeLabel.textContent = 'COD Handling Fee (4%)';
+      if(feeValue){
+        feeValue.textContent = 'Invoice par add hogi';
+        feeValue.style.color = 'var(--muted)';
+        feeValue.style.fontWeight = 'normal';
+      }
+      if(noticeBox){
+        noticeBox.innerHTML = '<strong>📦 Delivery &amp; COD Notice:</strong> Books ka actual weight pack karne ke baad confirm hota hai. Exact courier charges aur 4% COD fee final bill mein add kar ke WhatsApp par confirm kiye jayenge.';
+      }
+    } else if(val === 'card'){
+      if(feeLabel) feeLabel.textContent = 'Card Payment Fee';
+      if(feeValue){
+        feeValue.textContent = '0% (Free / No Fee)';
+        feeValue.style.color = '#10B981';
+        feeValue.style.fontWeight = '700';
+      }
+      if(noticeBox){
+        noticeBox.innerHTML = '<strong>💳 Card Payment:</strong> Credit / Debit Card payment par 0% handling fee hai (Free). Books ka actual weight pack hone ke baad courier charges WhatsApp par confirm kiye jayenge.';
+      }
+    } else if(val === 'jazzcash'){
+      if(feeLabel) feeLabel.textContent = 'JazzCash Processing Fee';
+      if(feeValue){
+        feeValue.textContent = '0% (Free)';
+        feeValue.style.color = '#10B981';
+        feeValue.style.fontWeight = '700';
+      }
+      if(noticeBox){
+        noticeBox.innerHTML = '<strong>📱 JazzCash Wallet:</strong> JazzCash payment par koi COD fee nahi (0% Fee). Weight ke mutabiq courier charges WhatsApp par confirm kiye jayenge.';
+      }
+    } else if(val === 'easypaisa'){
+      if(feeLabel) feeLabel.textContent = 'EasyPaisa Processing Fee';
+      if(feeValue){
+        feeValue.textContent = '0% (Free)';
+        feeValue.style.color = '#10B981';
+        feeValue.style.fontWeight = '700';
+      }
+      if(noticeBox){
+        noticeBox.innerHTML = '<strong>📱 EasyPaisa Wallet:</strong> EasyPaisa payment par koi COD fee nahi (0% Fee). Weight ke mutabiq courier charges WhatsApp par confirm kiye jayenge.';
+      }
+    }
+  });
+});
+
+async function placeOrder(e){
+  e.preventDefault();
+  if(cart.length===0){ showToast('Your cart is empty'); return false; }
+
+  const btn = document.getElementById('placeOrderBtn');
+  const originalBtnText = btn ? btn.textContent : 'Place Order';
+  if(btn){ btn.disabled = true; btn.textContent = 'Placing Order...'; }
+
+  try {
+    if (typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length) {
+      throw new Error('Could not connect to the server. Please check your internet connection and try again.');
+    }
+    const db = firebase.firestore();
+
+    const name = document.getElementById('coName').value.trim();
+    const phone = document.getElementById('coPhone').value.trim();
+    const email = document.getElementById('coEmail').value.trim();
+    const address = document.getElementById('coAddress').value.trim();
+    const city = document.getElementById('coCity').value.trim();
+    const province = document.getElementById('coProvince').value;
+    const notes = document.getElementById('coNotes').value.trim();
+    const activeOpt = document.querySelector('.pay-opt.checked') || document.querySelector('input[name="payMethod"]:checked')?.closest('.pay-opt');
+    const payMethod = activeOpt ? (activeOpt.dataset.val || activeOpt.querySelector('input')?.value || 'cod') : 'cod';
+    
+    const payMethodTitles = {
+      'cod': 'Cash on Delivery',
+      'easypaisa': 'EasyPaisa',
+      'jazzcash': 'JazzCash',
+      'card': 'Credit / Debit Card'
+    };
+    const paymentMethodTitle = payMethodTitles[payMethod] || 'Cash on Delivery';
+    
+    let paymentDetails = '';
+    if (payMethod === 'jazzcash' || payMethod === 'easypaisa') {
+      paymentDetails = (document.getElementById('payWalletNo')?.value || '').trim() || phone;
+    } else if (payMethod === 'card') {
+      paymentDetails = (document.getElementById('payCardNo')?.value || '').trim();
+    }
+
+    if(!name || !phone || !email || !address || !city || !province){
+      showToast('Baraye meharbani tamam required fields fill karein');
+      return false;
+    }
+
+    const sub = cart.reduce((s,c)=>s+c.price*c.qty,0);
+    const shipping = 0;
+    const total = sub;
+
+    const orderId = 'EB-' + Math.floor(100000 + Math.random()*899999);
+
+    const orderItems = cart.map(c => ({
+      id: String(c.id),
+      title: c.title || 'Product',
+      price: Number(c.price) || 0,
+      qty: Number(c.qty) || 1,
+      img: c.img || ''
+    }));
+
+    const orderData = {
+      id: orderId,
+      customer: name,
+      phone: phone,
+      email: email,
+      address: address,
+      city: city,
+      province: province,
+      notes: notes,
+      paymentMethod: payMethod,
+      paymentMethodTitle: paymentMethodTitle,
+      paymentDetails: paymentDetails,
+      items: orderItems,
+      subtotal: sub,
+      shipping: 0,
+      shippingNote: 'Weight ke mutabiq',
+      codFee: 0,
+      total: sub,
+      status: 'Pending',
+      date: Date.now(),
+      source: 'website'
+    };
+
+    // 1. Sync to WooCommerce REST API
+    try {
+      if (typeof window.syncOrderToWooCommerce === 'function') {
+        window.syncOrderToWooCommerce(orderData).catch(err => console.warn('WC sync:', err));
+      }
+    } catch(wcErr) {
+      console.warn('WooCommerce sync warning:', wcErr);
+    }
+
+    // 2. Direct Instant Email Notification to info@taleemihub.com and taleemihub2020@gmail.com
+    orderData.admin_emails = ['info@taleemihub.com', 'taleemihub2020@gmail.com'];
+    fetch('https://api.studypack.taleemihub.com/wp-json/studypack/v1/order-notify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(orderData)
+    }).catch(e => console.warn('Email notify fetch error:', e));
+
+    // 3. Write to Firestore Database for Live Admin Dashboard
+    db.collection('orders').doc(orderId).set(orderData);
+
+    document.getElementById('orderIdDisplay').textContent = 'Order #' + orderId;
+    
+    // 4. Generate WhatsApp confirmation link
+    const waPhone = '923331310234';
+    const itemsList = cart.map(c => `• ${c.qty}x ${c.title} (Rs ${c.price})`).join('\n');
+    const waMessage = `*Assalam-o-Alaikum Study Pack!*\nMaine website par naya order place kiya hai:\n\n📦 *Order ID:* #${orderId}\n👤 *Name:* ${name}\n📱 *Phone:* ${phone}\n📍 *City:* ${city}\n🏠 *Address:* ${address}\n\n📚 *Ordered Books:*\n${itemsList}\n\n💰 *Subtotal (Books):* Rs ${sub.toLocaleString()}\n🚚 *Delivery Charges:* Weight ke mutabiq\n\nBaraye meharbani actual parcel weight aur final bill confirm kar dein.`;
+    
+    const waLink = `https://wa.me/${waPhone}?text=${encodeURIComponent(waMessage)}`;
+    const waBtn = document.getElementById('whatsappConfirmBtn');
+    if (waBtn) waBtn.href = waLink;
+
+    document.getElementById('successOverlay').classList.add('show');
+    cart = [];
+    saveCart();
+    renderCart();
+  } catch(err) {
+    console.error('Order placement failed:', err);
+    showToast('Order place nahi ho saka, dobara koshish karein.');
+  } finally {
+    if(btn){ btn.disabled = false; btn.textContent = originalBtnText; }
+  }
+  return false;
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  renderCheckoutSummary();
+});
+</script>
+
+<script>
+/* ================= 3D UPSELL CAROUSEL LOGIC ================= */
+let currentUpsellIndex = 0;
+let upsellItems = [];
+let upsellTimer = null;
+window.__allUpsells = [];
+
+function initUpsellData() {
+  const toys = (typeof SCRAPED_TOYS !== 'undefined') ? SCRAPED_TOYS : [];
+  const stats = (typeof SCRAPED_STATIONERY !== 'undefined') ? SCRAPED_STATIONERY : [];
+  
+  // Pick curated popular items with valid images
+  const featuredToys = toys.filter(t => t.img).slice(0, 10).map(t => ({ ...t, catType: 'toys', badge: '🧸 Toy' }));
+  const featuredStats = stats.filter(s => s.img).slice(0, 10).map(s => ({ ...s, catType: 'stationery', badge: '✏️ Stationery' }));
+  
+  window.__allUpsells = [];
+  const maxLen = Math.max(featuredToys.length, featuredStats.length);
+  for (let i = 0; i < maxLen; i++) {
+    if (featuredToys[i]) window.__allUpsells.push(featuredToys[i]);
+    if (featuredStats[i]) window.__allUpsells.push(featuredStats[i]);
+  }
+  
+  upsellItems = window.__allUpsells;
+  renderUpsellCards();
+  startUpsellAutoplay();
+}
+
+function switchUpsellCategory(cat, btn) {
+  document.querySelectorAll('.upsell-tab').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  
+  if (cat === 'all') {
+    upsellItems = window.__allUpsells;
+  } else {
+    upsellItems = window.__allUpsells.filter(x => x.catType === cat);
+  }
+  currentUpsellIndex = 0;
+  renderUpsellCards();
+}
+
+function escapeUpsellHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function renderUpsellCards() {
+  const track = document.getElementById('upsellTrack');
+  const dots = document.getElementById('upsellDots');
+  if (!track) return;
+  
+  if (!upsellItems || upsellItems.length === 0) {
+    track.innerHTML = '<p style="color:#64748B;">No add-on items available.</p>';
+    return;
+  }
+  
+  track.innerHTML = upsellItems.map((item, idx) => {
+    const priceFormatted = (typeof window.money === 'function') ? window.money(item.price) : 'PKR ' + Number(item.price).toLocaleString();
+    return `
+      <div class="upsell-card-3d hidden-card" id="upsellCard_${idx}" onclick="handleCardClick(${idx})">
+        <span class="upsell-card-cat">${item.badge || 'Add-on'}</span>
+        <img class="upsell-card-img" src="${item.img || 'assets/images/logo.png'}" alt="${escapeUpsellHtml(item.title)}" onerror="this.src='assets/images/logo.png'">
+        <div class="upsell-card-title" title="${escapeUpsellHtml(item.title)}">${escapeUpsellHtml(item.title)}</div>
+        <div class="upsell-card-price">${priceFormatted}</div>
+        <button class="upsell-add-btn" id="upsellBtn_${idx}" onclick="event.stopPropagation(); addUpsellToCart('${item.id}', ${idx})">
+          <span>⚡ Add to Order</span>
+        </button>
+      </div>
+    `;
+  }).join('');
+  
+  if (dots) {
+    dots.innerHTML = upsellItems.map((_, idx) => `
+      <div class="upsell-dot ${idx === currentUpsellIndex ? 'active' : ''}" onclick="goToUpsellSlide(${idx})"></div>
+    `).join('');
+  }
+  
+  update3DCardPositions();
+}
+
+function update3DCardPositions() {
+  const total = upsellItems.length;
+  if (total === 0) return;
+  
+  const prevIdx = (currentUpsellIndex - 1 + total) % total;
+  const nextIdx = (currentUpsellIndex + 1) % total;
+  
+  upsellItems.forEach((_, idx) => {
+    const el = document.getElementById(`upsellCard_${idx}`);
+    if (!el) return;
+    el.className = 'upsell-card-3d hidden-card';
+    if (idx === currentUpsellIndex) {
+      el.className = 'upsell-card-3d active';
+    } else if (idx === prevIdx) {
+      el.className = 'upsell-card-3d prev-card';
+    } else if (idx === nextIdx) {
+      el.className = 'upsell-card-3d next-card';
+    }
+  });
+  
+  const dots = document.querySelectorAll('.upsell-dot');
+  dots.forEach((d, idx) => {
+    d.classList.toggle('active', idx === currentUpsellIndex);
+  });
+}
+
+function moveUpsellSlide(dir, manual = false) {
+  const total = upsellItems.length;
+  if (total <= 1) return;
+  currentUpsellIndex = (currentUpsellIndex + dir + total) % total;
+  update3DCardPositions();
+  if (manual) {
+    resetUpsellAutoplayTimer();
+  }
+}
+
+function goToUpsellSlide(idx) {
+  currentUpsellIndex = idx;
+  update3DCardPositions();
+  resetUpsellAutoplayTimer();
+}
+
+function handleCardClick(idx) {
+  if (idx !== currentUpsellIndex) {
+    currentUpsellIndex = idx;
+    update3DCardPositions();
+    resetUpsellAutoplayTimer();
+  }
+}
+
+function addUpsellToCart(id, idx) {
+  const item = upsellItems.find(x => String(x.id) === String(id));
+  if (!item) return;
+  
+  if (typeof window.addToCart === 'function') {
+    window.addToCart(item.id);
+  } else {
+    const existing = (window.cart || []).find(c => String(c.id) === String(item.id));
+    if (existing) {
+      existing.qty = (Number(existing.qty) || 1) + 1;
+    } else {
+      (window.cart = window.cart || []).push({
+        id: item.id,
+        title: item.title,
+        price: item.price,
+        img: item.img,
+        qty: 1
+      });
+    }
+    if (typeof window.saveCart === 'function') window.saveCart();
+    if (typeof window.renderCart === 'function') window.renderCart();
+  }
+  
+  if (typeof renderCheckoutSummary === 'function') renderCheckoutSummary();
+  
+  const btn = document.getElementById(`upsellBtn_${idx}`);
+  if (btn) {
+    btn.classList.add('added');
+    btn.innerHTML = '<span>✅ Added to Order!</span>';
+    setTimeout(() => {
+      btn.classList.remove('added');
+      btn.innerHTML = '<span>⚡ Add Again</span>';
+    }, 2200);
+  }
+  
+  if (typeof showToast === 'function') {
+    showToast(`✅ "${item.title.slice(0, 25)}..." added to your order!`);
+  }
+  resetUpsellAutoplayTimer();
+}
+
+function closeUpsellModal() {
+  const upsell = document.getElementById('upsellOverlay');
+  if (upsell) upsell.classList.remove('show');
+  if (upsellTimer) {
+    clearInterval(upsellTimer);
+    upsellTimer = null;
+  }
+}
+
+function resetUpsellAutoplayTimer() {
+  if (upsellTimer) clearInterval(upsellTimer);
+  upsellTimer = setInterval(() => {
+    moveUpsellSlide(1);
+  }, 2200);
+}
+
+function startUpsellAutoplay() {
+  if (upsellTimer) clearInterval(upsellTimer);
+  upsellTimer = setInterval(() => {
+    const overlay = document.getElementById('upsellOverlay');
+    if (overlay && overlay.classList.contains('show')) {
+      moveUpsellSlide(1);
+    }
+  }, 2200);
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  initUpsellData();
+  
+  // Show modal automatically after 1 second if cart has items
+  setTimeout(() => {
+    const upsell = document.getElementById('upsellOverlay');
+    if (upsell && (window.cart && window.cart.length > 0)) {
+      upsell.classList.add('show');
+      startUpsellAutoplay();
+    }
+  }, 1000);
+});
+</script>
+
+<!-- Mobile Nav JS -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const topBurger = document.getElementById("topBurger");
+  const glassMenu = document.getElementById("glassMenu");
+  const glassCloseBtn = document.getElementById("glassCloseBtn");
+  
+  if(topBurger && glassMenu) {
+    const burgerIcon = topBurger.querySelector("svg");
+    let menuOpen = false;
+
+    function closeMenu() {
+      menuOpen = false;
+      glassMenu.classList.remove("open");
+      burgerIcon.innerHTML = '<path d="M3 12h18M3 6h18M3 18h18"/>';
+    }
+
+    function openMenu() {
+      menuOpen = true;
+      glassMenu.classList.add("open");
+      burgerIcon.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
+    }
+
+    topBurger.addEventListener("click", function(e) {
+      if(typeof createRipple === 'function') createRipple(e, topBurger);
+      if(menuOpen) closeMenu();
+      else openMenu();
+    });
+
+    if(glassCloseBtn) {
+      glassCloseBtn.addEventListener("click", function(e) {
+        if(typeof createRipple === 'function') createRipple(e, glassCloseBtn);
+        closeMenu();
+      });
+    }
+  }
+
+  const gmLinks = document.querySelectorAll(".gm-link");
+  gmLinks.forEach(link => {
+    link.addEventListener("click", function(e) {
+      if(typeof createRipple === 'function') createRipple(e, link);
+    });
+  });
+});
+</script>
+
+  <script src="assets/js/search_logic.js"></script>
+  <script src="assets/js/chatbot.js" defer></script>
+  <script src="assets/js/whatsapp.js" defer></script>
+</body>
+</html>

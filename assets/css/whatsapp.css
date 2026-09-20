@@ -1,0 +1,119 @@
+/* ========================================================
+   STUDY PACK FLOATING WHATSAPP BUTTON (BOTTOM-RIGHT BESIDE CHATBOT)
+   ======================================================== */
+.sp-wa-floating {
+  position: fixed;
+  bottom: 20px;
+  right: 82px;
+  z-index: 99998;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease, visibility 0.25s ease;
+}
+
+body.cart-open .sp-wa-floating,
+body.modal-open .sp-wa-floating {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  transform: translateY(35px) scale(0.85) !important;
+}
+
+.sp-wa-floating:hover {
+  transform: scale(1.08) translateY(-2px);
+}
+
+.sp-wa-btn {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #25D366, #128C7E);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45), 0 2px 6px rgba(0, 0, 0, 0.1);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.sp-wa-btn svg {
+  width: 30px;
+  height: 30px;
+  fill: #ffffff;
+}
+
+/* Pulsing animated ripple */
+.sp-wa-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: 50%;
+  border: 2px solid #25D366;
+  animation: spWaPulse 2s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+}
+
+@keyframes spWaPulse {
+  0% { transform: scale(1); opacity: 0.9; }
+  70% { transform: scale(1.45); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* Floating Tooltip Pill */
+.sp-wa-pill {
+  background: #0F172A;
+  color: #ffffff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.18);
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  animation: spWaSlideIn 0.4s ease-out;
+}
+
+.sp-wa-pill .sp-wa-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #25D366;
+  display: inline-block;
+  animation: spWaDotBlink 1.5s infinite;
+}
+
+@keyframes spWaDotBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+@keyframes spWaSlideIn {
+  from { opacity: 0; transform: translateX(10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@media (max-width: 640px) {
+  .sp-wa-floating {
+    bottom: 16px;
+    right: 74px;
+  }
+  .sp-wa-btn {
+    width: 48px;
+    height: 48px;
+  }
+  .sp-wa-btn svg {
+    width: 26px;
+    height: 26px;
+  }
+  .sp-wa-pill {
+    display: none !important;
+  }
+}

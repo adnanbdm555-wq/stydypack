@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Study Pack — Admin Dashboard</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<base href="/dashboard/">
+<link rel="stylesheet" href="/dashboard/css/global.css?v=25">
+<link rel="stylesheet" href="/dashboard/css/layout.css?v=25">
+<link rel="stylesheet" href="/dashboard/css/components.css?v=25">
+<link rel="stylesheet" href="/dashboard/css/dashboard-extra.css?v=25">
+</head>
+<body>
+
+<!-- ================= LOGIN SCREEN ================= -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div style="margin-bottom: 20px; display: flex; justify-content: center;">
+      <img src="/assets/images/studypack_logo.png" style="height: 65px; width: auto; object-fit: contain;" alt="Study Pack Logo">
+    </div>
+    <h2>Admin Login</h2>
+    <p class="sub">Study Pack — Store Dashboard</p>
+    <form id="adminLoginForm">
+      <input type="email" id="loginEmail" placeholder="Email" autocomplete="username" required>
+      <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" required>
+      <button type="submit" class="btn btn-primary">Secure Login</button>
+    </form>
+    <p id="loginError"></p>
+    <p id="loginInfo"></p>
+  </div>
+</div>
+
+<!-- ================= APP SHELL ================= -->
+<div id="appShell">
+<div class="app-container">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header" style="flex-direction:column; align-items:flex-start; justify-content:center; gap:0.25rem; height:auto; padding: 1.5rem;">
+      <div style="display:flex; align-items:center; gap:0.75rem; width:100%;">
+        <img src="../assets/images/studypack_logo.png" style="height:32px; width:auto; object-fit:contain;" alt="Logo">
+        <span style="font-size:1.3rem;">Study Pack</span>
+      </div>
+      <a href="/" target="_blank" style="font-size:0.8rem; color:var(--text-muted); display:flex; align-items:center; gap:0.4rem; text-decoration:none; margin-left:2.5rem; margin-top:0.2rem;" title="Open Main Website">
+        <i data-lucide="external-link" style="width:14px; height:14px;"></i> Open Website
+      </a>
+    </div>
+    <nav class="sidebar-menu">
+      <a href="#" class="nav-item active" data-view="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+      <a href="#" class="nav-item" data-view="products"><i data-lucide="book-open"></i> Products</a>
+      <a href="#" class="nav-item" data-view="courses"><i data-lucide="graduation-cap"></i> School Syllabi / Courses</a>
+      <a href="#" class="nav-item" data-view="priceAdjuster"><i data-lucide="percent"></i> Bulk Price Adjuster</a>
+      <a href="#" class="nav-item" data-view="orders"><i data-lucide="shopping-cart"></i> Orders</a>
+      <a href="#" class="nav-item" data-view="customers"><i data-lucide="users"></i> Customers</a>
+      <a href="#" class="nav-item" data-view="livechat"><i data-lucide="message-square"></i> Live Support <span class="badge-count" id="unreadChatsCount" style="display:none; background:#EF4444; color:#fff; font-size:10px; padding:2px 6px; border-radius:10px; margin-left:auto;">0</span></a>
+      <a href="#" class="nav-item" data-view="inventory"><i data-lucide="package"></i> Inventory</a>
+      <a href="#" class="nav-item" data-view="coupons"><i data-lucide="ticket-percent"></i> Coupons</a>
+      <a href="#" class="nav-item" data-view="categories"><i data-lucide="tags"></i> Categories</a>
+      <a href="#" class="nav-item" data-view="reports"><i data-lucide="bar-chart-3"></i> Financials &amp; Reports</a>
+      <a href="#" class="nav-item" data-view="settings"><i data-lucide="settings"></i> Settings</a>
+    </nav>
+    <div style="padding:1.25rem; border-top:1px solid var(--border-color); display:flex; align-items:center; gap:0.75rem;">
+      <div style="width:38px;height:38px;border-radius:50%;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;" id="avatarInitial">A</div>
+      <div style="min-width:0; flex:1;">
+        <div id="currentAdminName" style="font-weight:700; font-size:0.9rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">—</div>
+        <div id="currentAdminRole" class="text-muted" style="font-size:0.78rem; text-transform:capitalize;">—</div>
+      </div>
+      <button class="icon-btn-sm" id="logoutBtn" title="Log out"><i data-lucide="log-out"></i></button>
+    </div>
+  </aside>
+
+  <div class="main-wrapper">
+    <header class="top-header">
+      <div class="header-left">
+        <button class="menu-toggle" id="menuToggle"><i data-lucide="menu"></i></button>
+        <div class="global-search">
+          <i data-lucide="search"></i>
+          <input type="text" id="globalSearch" placeholder="Search books, orders, customers...">
+        </div>
+      </div>
+      <div class="header-right">
+        <button class="icon-btn" id="themeToggle" title="Toggle theme"><i data-lucide="moon"></i></button>
+      </div>
+    </header>
+
+    <main class="content-area">
+
+      <!-- ================= DASHBOARD ================= -->
+      <section id="dashboard" class="view-section active">
+        <div class="section-head">
+          <div><h1>Dashboard</h1><p>Aapki store ka overview, ek nazar mein.</p></div>
+        </div>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-header"><span class="stat-title">Total Sales</span><span class="stat-icon success"><i data-lucide="banknote"></i></span></div>
+            <div class="stat-value" id="dashTotalSales">PKR 0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header"><span class="stat-title">Total Orders</span><span class="stat-icon primary"><i data-lucide="shopping-bag"></i></span></div>
+            <div class="stat-value" id="dashTotalOrders">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header"><span class="stat-title">Pending Orders</span><span class="stat-icon warning"><i data-lucide="clock"></i></span></div>
+            <div class="stat-value" id="dashPendingOrders">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header"><span class="stat-title">Customers</span><span class="stat-icon info"><i data-lucide="users"></i></span></div>
+            <div class="stat-value" id="dashTotalCustomers">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header"><span class="stat-title">Products</span><span class="stat-icon primary"><i data-lucide="book-open"></i></span></div>
+            <div class="stat-value" id="dashTotalProducts">0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header"><span class="stat-title">Out of Stock</span><span class="stat-icon danger"><i data-lucide="alert-triangle"></i></span></div>
+            <div class="stat-value" id="dashOutOfStock">0</div>
+          </div>
+        </div>
+
+        <div class="charts-grid">
+          <div class="chart-card">
+            <div class="chart-header"><span class="chart-title">Revenue — Last 14 Days</span></div>
+            <canvas id="revenueChart" height="90"></canvas>
+          </div>
+          <div class="chart-card small">
+            <div class="chart-header"><span class="chart-title">Top Selling</span></div>
+            <canvas id="topProductsChart" height="90"></canvas>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="chart-header" style="padding:1.5rem 1.5rem 0;"><span class="chart-title">Recent Orders</span></div>
+          <table>
+            <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th></tr></thead>
+            <tbody id="recentOrdersBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= PRODUCTS ================= -->
+      <section id="products" class="view-section">
+        <div class="section-head">
+          <div><h1>Products</h1><p>Books, stationery, toys aur courses manage karein.</p></div>
+          <div class="section-head-actions">
+            <button class="btn btn-outline" onclick="exportProductsCSV()"><i data-lucide="download"></i> Export CSV</button>
+            <button class="btn btn-primary" onclick="openProductModal()"><i data-lucide="plus"></i> Add Product</button>
+          </div>
+        </div>
+
+        <div class="filters-toolbar">
+          <input type="text" id="prodSearch" placeholder="Search title, ID..." style="min-width:180px;">
+          <select id="filterCategory">
+            <option value="">All Categories</option>
+            <option value="Books">Books &amp; Textbooks</option>
+            <option value="School Courses">School Syllabi / Courses</option>
+            <option value="Stationery">Stationery &amp; Supplies</option>
+            <option value="Toys &amp; Gifts">Educational Toys &amp; Gifts</option>
+          </select>
+          <select id="filterPublisher">
+            <option value="">All Publishers</option>
+          </select>
+          <select id="filterClass">
+            <option value="">All Classes</option>
+          </select>
+          <select id="filterStock">
+            <option value="">All Stock</option>
+            <option value="in">In Stock</option>
+            <option value="out">Out of Stock</option>
+          </select>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Image</th><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th style="text-align:right;">Actions</th></tr></thead>
+            <tbody id="productsTbody"></tbody>
+          </table>
+          <div class="pagination" id="productsPagination"></div>
+        </div>
+      </section>
+
+      <!-- ================= SCHOOL COURSES & SYLLABI ================= -->
+      <section id="courses" class="view-section">
+        <div class="section-head">
+          <div>
+            <h1>School Syllabi &amp; Course Packs</h1>
+            <p>All 36 school syllabi sets, classes, and real-time pricing.</p>
+          </div>
+          <div class="section-head-actions">
+            <button class="btn btn-outline" onclick="openCourseBulkPriceModal()"><i data-lucide="trending-up"></i> Bulk School Price Adjuster</button>
+            <button class="btn btn-primary" onclick="openAddCourseModal()"><i data-lucide="folder-plus"></i> Add Course Pack</button>
+            <button class="btn" style="background:#2563eb; color:#fff;" onclick="openAddCourseBookModal()"><i data-lucide="book-plus"></i> + Add More Course Books</button>
+          </div>
+        </div>
+
+        <!-- School Selector Filter Pills -->
+        <div style="margin-bottom:1.5rem; overflow-x:auto; white-space:nowrap; padding-bottom:6px;" id="schoolFilterPills"></div>
+
+        <div class="filters-toolbar">
+          <input type="text" id="courseSearch" placeholder="Search course, school, class (e.g. Beaconhouse Class 4)..." style="flex:2;">
+          <div style="display:flex; align-items:center; gap:8px; font-weight:700; color:var(--text-main); margin-left:auto;">
+            <span id="totalCoursesCount">0 Course Sets</span>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>Course Set Title</th>
+                <th>School System</th>
+                <th>Class / Grade</th>
+                <th>Price (PKR)</th>
+                <th>Stock Status</th>
+                <th style="text-align:right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="coursesTbody"></tbody>
+          </table>
+          <div class="pagination" id="coursesPagination"></div>
+        </div>
+      </section>
+
+      <!-- ================= BULK PRICE ADJUSTER ================= -->
+      <section id="priceAdjuster" class="view-section">
+        <div class="section-head">
+          <div>
+            <h1>Bulk Price &amp; Markup Manager</h1>
+            <p>Entire catalog ya specific categories ki prices percentage se increase/decrease karein.</p>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1.1fr 0.9fr; gap:24px; margin-bottom:28px; align-items:start;">
+          
+          <!-- Adjustment Controls Card -->
+          <div style="background:var(--bg-card); border-radius:16px; padding:24px; border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
+            <h3 style="font-size:16px; font-weight:800; color:var(--text-main); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+              <i data-lucide="sliders" style="width:20px; color:var(--primary);"></i> Price Markup Settings
+            </h3>
+            
+            <form onsubmit="applyGlobalPriceRule(event)">
+              <div class="form-group">
+                <label>Select Target Catalog Scope *</label>
+                <select id="priceScopeSelect" required>
+                  <option value="all">🌐 Entire Website Catalog (6,000+ Items)</option>
+                  <option value="oxford">📘 Oxford University Press Books</option>
+                  <option value="paramount">📙 Paramount Books</option>
+                  <option value="afaq">📗 AFAQ Publications</option>
+                  <option value="courses">🎒 School Syllabi / Course Sets</option>
+                  <option value="stationery">✏️ Stationery Items</option>
+                  <option value="toys">🧸 Toys &amp; Games</option>
+                </select>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                <div class="form-group">
+                  <label>Action</label>
+                  <select id="priceActionSelect">
+                    <option value="inc">📈 Increase Price (+%)</option>
+                    <option value="dec">📉 Decrease Price (-%)</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Percentage (%) *</label>
+                  <input type="number" id="pricePercentInput" min="1" max="100" placeholder="e.g. 10" value="10" required>
+                </div>
+              </div>
+
+              <div class="form-group" style="display:flex; align-items:center; gap:10px; margin-top:8px;">
+                <input type="checkbox" id="priceRoundCheck" checked style="width:18px; height:18px; accent-color:var(--primary);">
+                <label for="priceRoundCheck" style="margin:0; font-size:13px; font-weight:600; cursor:pointer;">Round to nearest 10 (e.g. 453 -> 450, 458 -> 460)</label>
+              </div>
+
+              <div style="margin-top:20px; display:flex; gap:12px;">
+                <button type="submit" class="btn btn-primary" style="flex:1;"><i data-lucide="check-circle"></i> Apply &amp; Sync to Website</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Active Rules Card -->
+          <div style="background:var(--bg-card); border-radius:16px; padding:24px; border:1px solid var(--border-color); box-shadow:var(--shadow-sm);">
+            <h3 style="font-size:16px; font-weight:800; color:var(--text-main); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+              <i data-lucide="layers" style="width:20px; color:var(--primary);"></i> Active Markup Rules
+            </h3>
+            
+            <table style="width:100%;">
+              <thead>
+                <tr>
+                  <th>Scope</th>
+                  <th>Markup</th>
+                  <th>Rounding</th>
+                  <th>Applied On</th>
+                  <th style="text-align:right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="activePriceRulesTbody"></tbody>
+            </table>
+          </div>
+
+        </div>
+
+        <!-- Live Impact Preview Table -->
+        <div class="table-container">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:1.25rem 1.5rem; border-bottom:1px solid var(--border-color);">
+            <span style="font-weight:800; font-size:15px; color:var(--text-main);">Live Price Impact Preview</span>
+            <span class="badge badge-info" id="previewItemCount">0 Products Impacted</span>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>Sample Product Title</th>
+                <th>Original Price</th>
+                <th>New Adjusted Price</th>
+                <th>Net Difference</th>
+              </tr>
+            </thead>
+            <tbody id="pricePreviewTbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+
+
+      <!-- ================= ORDERS ================= -->
+      <section id="orders" class="view-section">
+        <div class="section-head">
+          <div><h1>Orders</h1><p>Sab orders track aur manage karein.</p></div>
+          <div class="section-head-actions">
+            <button class="btn btn-outline" onclick="fetchWooCommerceOrders()"><i data-lucide="refresh-cw"></i> Sync WooCommerce</button>
+            <button class="btn btn-outline" onclick="exportOrdersCSV()"><i data-lucide="download"></i> Export CSV</button>
+          </div>
+        </div>
+
+        <div class="filters-toolbar">
+          <input type="text" id="orderSearch" placeholder="Search order #, name, phone...">
+          <select id="orderStatusFilter">
+            <option value="">All Status</option>
+            <option value="Pending">Pending</option>
+            <option value="Processing">Processing</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Order</th><th>Customer</th><th>Items</th><th>Total</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead>
+            <tbody id="ordersTableBody"></tbody>
+          </table>
+          <div class="pagination" id="ordersPagination"></div>
+        </div>
+      </section>
+
+      <!-- ================= CUSTOMERS ================= -->
+      <section id="customers" class="view-section">
+        <div class="section-head">
+          <div><h1>Customers</h1><p>Orders se derive kiye gaye customers (CRM).</p></div>
+        </div>
+
+        <div class="filters-toolbar">
+          <input type="text" id="custSearch" placeholder="Search name or phone...">
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Customer</th><th>Phone</th><th>Orders</th><th>Total Spent</th><th>Last Order</th><th style="text-align:right;"></th></tr></thead>
+            <tbody id="customersTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= INVENTORY ================= -->
+      <section id="inventory" class="view-section">
+        <div class="section-head">
+          <div><h1>Inventory</h1><p>Stock status manage karein.</p></div>
+        </div>
+
+        <div class="filters-toolbar">
+          <input type="text" id="invSearch" placeholder="Search product...">
+          <select id="invStockFilter">
+            <option value="">All</option>
+            <option value="in">In Stock</option>
+            <option value="out">Out of Stock</option>
+          </select>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Product</th><th>Category</th><th>Status</th><th style="text-align:right;">Action</th></tr></thead>
+            <tbody id="inventoryTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= COUPONS ================= -->
+      <section id="coupons" class="view-section">
+        <div class="section-head">
+          <div><h1>Coupons</h1><p>Discount codes — ab real database mein save hote hain.</p></div>
+          <div class="section-head-actions">
+            <button class="btn btn-primary" onclick="openCouponModal()"><i data-lucide="plus"></i> Add Coupon</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Code</th><th>Type</th><th>Value</th><th>Used</th><th>Expiry</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead>
+            <tbody id="couponsTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= CATEGORIES ================= -->
+      <section id="categories" class="view-section">
+        <div class="section-head">
+          <div><h1>Categories</h1><p>Product categories aur classes manage karein.</p></div>
+          <div class="section-head-actions">
+            <button class="btn btn-primary" onclick="openCategoryModal()"><i data-lucide="plus"></i> Add Category</button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table>
+            <thead><tr><th>Name</th><th>Type</th><th>Products</th><th style="text-align:right;">Actions</th></tr></thead>
+            <tbody id="categoriesTableBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= REPORTS / FINANCIALS ================= -->
+      <section id="reports" class="view-section">
+        <div class="section-head">
+          <div><h1>Financials &amp; Reports</h1><p>Revenue, profit aur best sellers.</p></div>
+          <div class="section-head-actions">
+            <button class="btn btn-outline" onclick="exportOrdersCSV()"><i data-lucide="download"></i> Orders CSV</button>
+            <button class="btn btn-outline" onclick="exportProductsCSV()"><i data-lucide="download"></i> Products CSV</button>
+          </div>
+        </div>
+
+        <div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+          <div class="stat-card">
+            <div class="stat-header"><span class="stat-title">Total Revenue</span><span class="stat-icon success"><i data-lucide="banknote"></i></span></div>
+            <div class="stat-value" id="finTotalRevenue">PKR 0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header"><span class="stat-title">Est. Profit</span><span class="stat-icon primary"><i data-lucide="trending-up"></i></span></div>
+            <div class="stat-value" id="finTotalProfit">PKR 0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header"><span class="stat-title">Total Tax</span><span class="stat-icon warning"><i data-lucide="percent"></i></span></div>
+            <div class="stat-value" id="finTotalTax">PKR 0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-header"><span class="stat-title">Delivery Charges</span><span class="stat-icon info"><i data-lucide="truck"></i></span></div>
+            <div class="stat-value" id="finTotalShipping">PKR 0</div>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <div class="chart-header" style="padding:1.5rem 1.5rem 0;"><span class="chart-title">Best Selling Products</span></div>
+          <table>
+            <thead><tr><th>Product</th><th>Units Sold</th><th>Revenue</th><th>Profit</th></tr></thead>
+            <tbody id="bestSellersBody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ================= SETTINGS ================= -->
+      <section id="settings" class="view-section">
+        <div class="section-head">
+          <div><h1>Settings</h1><p>Store aur admin users manage karein.</p></div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab-btn active" data-tab="tab-store">Store Info</button>
+          <button class="tab-btn" data-tab="tab-admins">Admin Users</button>
+        </div>
+
+        <div class="tab-panel active" id="tab-store">
+          <div class="table-container" style="padding:1.5rem;">
+            <p class="text-muted">Store name, delivery charges aur baaki settings jald yahan add honge. Filhaal delivery charge code mein hardcoded hai: orders Rs. 2000 se kam par Rs. 150, uske upar free.</p>
+          </div>
+        </div>
+
+        <div class="tab-panel" id="tab-admins">
+          <div class="section-head">
+            <div><p class="text-muted">Naya staff add karne ke 2 steps hain: (1) Firebase Console → Authentication mein unka email/password se account banayen, (2) unka User UID copy kar ke yahan neeche add karen.</p></div>
+            <div class="section-head-actions">
+              <button class="btn btn-primary" onclick="openAdminModal()"><i data-lucide="user-plus"></i> Add Admin</button>
+            </div>
+          </div>
+          <div class="table-container">
+            <table>
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th><th style="text-align:right;">Actions</th></tr></thead>
+              <tbody id="adminsTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    
+      <!-- ================= LIVE CHAT / AGENT SUPPORT ================= -->
+      <section id="livechat" class="view-section">
+        <div class="section-head">
+          <div><h1>Live Customer Support</h1><p>Real-time customer chats, agent assignment aur live replies.</p></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 340px 1fr; gap: 1.5rem; height: calc(100vh - 220px); min-height: 550px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; overflow: hidden;">
+          
+          <!-- LEFT: Conversations list -->
+          <div style="border-right: 1px solid var(--border-color); display: flex; flex-direction: column; height: 100%;">
+            <div style="padding: 1rem; border-bottom: 1px solid var(--border-color); font-weight: 700; font-size: 0.95rem; color: var(--text-main); display:flex; justify-content:space-between; align-items:center;">
+              <span>Active Customer Chats</span>
+              <button class="btn btn-outline" style="padding:4px 8px; font-size:11px;" onclick="window.initLiveChatDashboard()"><i data-lucide="refresh-cw"></i></button>
+            </div>
+            <div id="chatConversationsList" style="flex: 1; overflow-y: auto;">
+              <div class="empty-state" style="padding:2rem;"><p>Chats load ho rahi hain...</p></div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Conversation detail & reply -->
+          <div style="display: flex; flex-direction: column; height: 100%;">
+            <div id="chatActiveHeader" style="padding: 1rem 1.25rem; border-bottom: 1px solid var(--border-color); background: var(--bg-card);">
+              <div style="color: var(--text-muted); font-size: 0.9rem;">Left list se koi bhi customer chat select karein</div>
+            </div>
+
+            <div id="chatActiveMessages" style="flex: 1; padding: 1.25rem; overflow-y: auto; background: var(--bg-body); display: flex; flex-direction: column;">
+              <div style="text-align: center; color: var(--text-muted); margin-top: 3rem; font-size: 0.9rem;">
+                <i data-lucide="messages-square" style="width: 48px; height: 48px; opacity: 0.3; margin-bottom: 0.5rem;"></i>
+                <p>Chat select karne par messages yahan live show honge.</p>
+              </div>
+            </div>
+
+            <!-- Quick canned responses & Input Area -->
+            <div id="chatInputArea" style="display: none; flex-direction: column; border-top: 1px solid var(--border-color); background: var(--bg-card);">
+              <div style="padding: 6px 12px; display: flex; gap: 6px; overflow-x: auto; background: rgba(0,0,0,0.02); border-bottom: 1px solid var(--border-color);">
+                <button class="btn btn-outline" style="padding: 2px 8px; font-size: 11px; white-space: nowrap;" onclick="sendQuickCanned('Assalam-o-Alaikum, Study Pack Support se main aapki kya madad kar sakta hoon?')">👋 Salam</button>
+                <button class="btn btn-outline" style="padding: 2px 8px; font-size: 11px; white-space: nowrap;" onclick="sendQuickCanned('Aapka order receive ho chuka hai, books pack hone ke baad final bill WhatsApp kar diya jayega.')">📦 Order Update</button>
+                <button class="btn btn-outline" style="padding: 2px 8px; font-size: 11px; white-space: nowrap;" onclick="sendQuickCanned('Delivery charges kitabon ke wazan ke mutabiq courier rate par lagte hain.')">🚚 Delivery Info</button>
+                <button class="btn btn-outline" style="padding: 2px 8px; font-size: 11px; white-space: nowrap;" onclick="sendQuickCanned('Aap apna mukammal pata aur phone number share kar dein taake order confirm karein.')">📍 Address Request</button>
+              </div>
+              <form onsubmit="sendAgentReply(event)" style="padding: 0.75rem 1rem; display: flex; gap: 0.5rem;">
+                <input type="text" id="adminChatInput" placeholder="Customer ko reply likhein (Enter dabayein)..." style="flex: 1; padding: 0.6rem 1rem; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-main); color: var(--text-main); font-size: 0.9rem;" autocomplete="off">
+                <button type="submit" class="btn btn-primary" style="padding: 0.6rem 1.25rem;"><i data-lucide="send"></i> Send</button>
+              </form>
+            </div>
+
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+</div>
+
+<!-- ================= PRODUCT MODAL ================= -->
+<div class="modal-overlay" id="productModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="modalTitle">Add New Product</h3><button class="modal-close" onclick="closeProductModal()"><i data-lucide="x"></i></button></div>
+    <form id="productForm">
+      <div class="modal-body">
+        <input type="hidden" id="prodId">
+        <div class="form-group">
+          <label>Image</label>
+          <div class="img-upload-row">
+            <img id="prodImgPreview" src="https://placehold.co/80x80" alt="">
+            <input type="file" id="prodImgFile" accept="image/*">
+          </div>
+          <input type="hidden" id="prodImg">
+        </div>
+        <div class="form-group"><label>Title *</label><input type="text" id="prodTitle" required></div>
+        <div class="form-row-2">
+          <div class="form-group"><label>Category</label>
+            <select id="prodCategory">
+              <option value="Books">Books</option>
+              <option value="Stationery">Stationery</option>
+              <option value="Toys">Toys</option>
+              <option value="Courses">Courses</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Publisher</label>
+            <input type="text" id="prodPublisher" list="publisherList" placeholder="e.g. Paramount, Oxford Books">
+            <datalist id="publisherList">
+              <option value="Oxford Books">
+              <option value="Paramount">
+              <option value="Bookmark">
+              <option value="Cambridge University Press">
+              <option value="AFAQ Publishers">
+              <option value="Spectrum Books">
+              <option value="Sindh Text Book">
+              <option value="ERI Publishers">
+              <option value="National Book Foundation">
+              <option value="Punjab Curriculum &amp; Textbook Board">
+              <option value="Other">
+            </datalist>
+          </div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group"><label>Class</label><input type="text" id="prodClass" placeholder="e.g. Grade 5"></div>
+          <div class="form-group"><label>Subject</label><input type="text" id="prodSubject" placeholder="e.g. English"></div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group"><label>Sale Price *</label><input type="number" id="prodPrice" min="0" step="1" required oninput="calculateMargin()"></div>
+          <div class="form-group"><label>Purchase Price</label><input type="number" id="prodPurchasePrice" min="0" step="1" oninput="calculateMargin()"></div>
+        </div>
+        <div class="form-group"><label>Discounted Price (optional)</label><input type="number" id="prodDiscPrice" min="0" step="1"></div>
+        <p class="form-hint" id="marginDisplay">Profit Margin: 0% (Rs. 0)</p>
+        <div class="form-group" style="display:flex; align-items:center; gap:0.75rem; margin-top:1rem;">
+          <label class="switch"><input type="checkbox" id="prodStock" checked><span class="slider"></span></label>
+          <label style="margin:0;">In Stock</label>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline" onclick="closeProductModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Product</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ================= COMPLETE ORDER MODAL ================= -->
+<div class="modal-overlay" id="orderModal">
+  <div class="modal-box wide">
+    <div class="modal-head">
+      <h3>Order <span id="modalOrderId"></span></h3>
+      <div style="display:flex; align-items:center; gap:0.6rem;">
+        <button class="btn btn-outline" style="padding:0.4rem 0.8rem; font-size:0.8rem;" onclick="toggleOrderEdit()"><i data-lucide="edit-2"></i> Edit Details</button>
+        <button class="modal-close" onclick="closeOrderModal()"><i data-lucide="x"></i></button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem; flex-wrap:wrap; gap:8px;">
+        <p class="text-muted" id="modalOrderDate" style="margin:0;"></p>
+        <div id="modalOrderStatusBadge"></div>
+      </div>
+
+      <!-- Customer Details Display Grid -->
+      <div id="modalCustomerInfo" style="background:var(--bg-main); border:1px solid var(--border-color); border-radius:12px; padding:1.25rem; margin-bottom:1rem;"></div>
+
+      <!-- Customer Details Edit Mode -->
+      <div id="modalCustomerEdit" style="display:none; flex-direction:column; gap:0.75rem; margin-bottom:1rem; background:var(--bg-main); border:1px solid var(--border-color); border-radius:12px; padding:1.25rem;">
+        <h4 style="font-size:14px; font-weight:700; margin-bottom:6px; color:var(--text-main);">Customer Information</h4>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group"><label>Customer Name *</label><input type="text" id="editOrderCustName"></div>
+          <div class="form-group"><label>Phone Number *</label><input type="text" id="editOrderCustPhone"></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group"><label>Email Address</label><input type="email" id="editOrderCustEmail"></div>
+          <div class="form-group"><label>City</label><input type="text" id="editOrderCustCity"></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group"><label>Province</label><input type="text" id="editOrderCustProvince"></div>
+          <div class="form-group"><label>Payment Method</label>
+            <select id="editOrderPayMethod">
+              <option value="cod">Cash on Delivery (COD)</option>
+              <option value="jazzcash">JazzCash</option>
+              <option value="easypaisa">EasyPaisa</option>
+              <option value="card">Credit / Debit Card</option>
+              <option value="bank">Direct Bank Transfer</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group"><label>Payment Account / Transaction No.</label><input type="text" id="editOrderPayDetails" placeholder="Wallet or Card/Ref details"></div>
+        <div class="form-group"><label>Delivery Address *</label><input type="text" id="editOrderCustAddress"></div>
+        <div class="form-group"><label>Order Notes / Customer Instructions</label><textarea id="editOrderNotes" rows="2" style="padding:0.6rem; border-radius:8px; border:1px solid var(--border-color); background:var(--bg-surface); color:var(--text-main); font-family:inherit;"></textarea></div>
+      </div>
+
+      <!-- Items Table -->
+      <table style="margin-top:1rem;">
+        <thead><tr><th>Item Details</th><th>Sale Price</th><th>Qty</th><th style="text-align:right;">Line Total</th></tr></thead>
+        <tbody id="modalOrderItems"></tbody>
+      </table>
+
+      <!-- Financials display -->
+      <div id="modalFinancialsDisplay" style="margin-top:1.25rem; display:flex; flex-direction:column; align-items:flex-end; gap:0.4rem; background:var(--bg-main); border:1px solid var(--border-color); border-radius:12px; padding:1.25rem;">
+        <div id="modalSpecialNoteDiv" style="display:none; color: var(--primary); font-style: italic; margin-bottom: 0.5rem; align-self:flex-start;">Note: <span id="modalSpecialNote"></span></div>
+        <div>Gross Sale (Items): <span id="modalSubtotal" style="font-weight:600;"></span></div>
+        <div id="modalPurchaseCostDiv" style="color:var(--text-secondary);">Wholesale / Purchase Cost: <span id="modalPurchaseCost" style="font-weight:600;"></span></div>
+        <div>Delivery (Charged to Customer): <span id="modalShipping" style="font-weight:600;"></span></div>
+        <div id="modalCourierExpenseDiv" style="color:var(--text-secondary);">Actual Courier Expense: <span id="modalCourierExpense" style="font-weight:600;"></span></div>
+        <div id="modalDiscountDiv" style="color:var(--danger); display:none;">Discount: <span id="modalDiscount" style="font-weight:600;"></span></div>
+        <div id="modalCodFeeDiv">COD Handling Fee: <span id="modalCodFee" style="font-weight:600;"></span></div>
+        <div id="modalTransferChargesDiv" style="color:var(--text-secondary); display:none;">Gateway / Transfer Fee: <span id="modalTransferCharges" style="font-weight:600;"></span></div>
+        <div id="modalTaxDiv" style="display:none;">Tax (<span id="modalTaxNote"></span>): <span id="modalTaxAmount"></span></div>
+        <div style="font-weight:800; font-size:1.2rem; color:var(--primary); margin-top:4px; border-top:1px solid var(--border-color); padding-top:4px; width:100%; text-align:right;">Grand Total Payable: <span id="modalTotal"></span></div>
+        <div id="modalOrderNetProfitDiv" style="margin-top:4px; padding:6px 12px; border-radius:8px; font-weight:800; font-size:1rem; display:flex; gap:8px; align-items:center;">
+          <span>Net Profit:</span> <span id="modalOrderNetProfit"></span>
+        </div>
+      </div>
+      
+      <!-- Financials edit -->
+      <div id="modalFinancialsEdit" style="display:none; flex-direction:column; gap:0.75rem; margin-top:1.25rem; background:var(--bg-main); border:1px solid var(--border-color); border-radius:12px; padding:1.25rem;">
+        <h4 style="font-size:14px; font-weight:700; margin-bottom:6px; color:var(--text-main);">Order Financials &amp; Cost Editor</h4>
+        
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label>Delivery Charged to Customer (PKR)</label>
+            <input type="number" id="editOrderShipping" oninput="recalcAdminOrderFinancials()">
+          </div>
+          <div class="form-group">
+            <label>Actual Courier Cost Paid (PKR)</label>
+            <input type="number" id="editOrderCourierCost" placeholder="e.g. 180" oninput="recalcAdminOrderFinancials()">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label>Wholesale Purchase Cost (PKR)</label>
+            <input type="number" id="editOrderPurchaseCost" placeholder="Cost of all books" oninput="recalcAdminOrderFinancials()">
+          </div>
+          <div class="form-group">
+            <label>Discount Given (PKR)</label>
+            <input type="number" id="editOrderDiscount" placeholder="0" oninput="recalcAdminOrderFinancials()">
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group">
+            <label>Gateway / Transfer Fee (PKR)</label>
+            <input type="number" id="editOrderTransferCharges" placeholder="e.g. JazzCash fee" oninput="recalcAdminOrderFinancials()">
+          </div>
+          <div class="form-group">
+            <label>COD Fee (PKR)</label>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <input type="checkbox" id="editOrderApplyCod" checked onchange="recalcAdminOrderFinancials()" style="width:20px; height:20px;">
+              <input type="number" id="editOrderCodFee" oninput="recalcAdminOrderFinancials(true)" style="flex:1;">
+            </div>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+          <div class="form-group"><label>Tax Note</label><input type="text" id="editOrderTaxNote" placeholder="e.g. GST"></div>
+          <div class="form-group"><label>Tax Amount (PKR)</label><input type="number" id="editOrderTaxAmount" oninput="recalcAdminOrderFinancials(true)"></div>
+        </div>
+
+        <div class="form-group"><label>Special / Weight Note</label><input type="text" id="editOrderSpecialNote" placeholder="e.g. Weight 2.5kg, packed in bubble"></div>
+
+        <div style="background:var(--bg-surface); padding:12px; border-radius:8px; border:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center; margin-top:6px;">
+          <div>
+            <div style="font-size:0.85rem; color:var(--text-secondary);">Estimated Order Net Profit:</div>
+            <div id="editCalculatedProfit" style="font-weight:900; font-size:1.15rem; color:#10b981;">Rs 0 (0%)</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:0.85rem; color:var(--text-secondary);">Calculated Total Payable:</div>
+            <div id="editCalculatedTotal" style="font-weight:800; font-size:1.15rem; color:var(--primary);">Rs 0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-outline" onclick="printInvoice(document.getElementById('modalOrderId').textContent.replace('#',''))"><i data-lucide="printer"></i> Print Invoice</button>
+      <button class="btn btn-primary" id="saveOrderEditsBtn" style="display:none;" onclick="saveOrderEdits()"><i data-lucide="check"></i> Save Order Changes</button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= CUSTOMER DETAIL MODAL ================= -->
+<div class="modal-overlay" id="customerModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="custModalName">Customer</h3><button class="modal-close" onclick="closeCustomerModal()"><i data-lucide="x"></i></button></div>
+    <div class="modal-body">
+      <p class="text-muted" id="custModalMeta" style="margin-bottom:1rem;"></p>
+      <table>
+        <thead><tr><th>Order</th><th>Date</th><th>Status</th><th style="text-align:right;">Total</th></tr></thead>
+        <tbody id="custModalOrders"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ================= COUPON MODAL ================= -->
+<div class="modal-overlay" id="couponModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="couponModalTitle">Add Coupon</h3><button class="modal-close" onclick="closeCouponModal()"><i data-lucide="x"></i></button></div>
+    <form id="couponForm">
+      <div class="modal-body">
+        <input type="hidden" id="couponDocId">
+        <div class="form-group"><label>Coupon Code *</label><input type="text" id="couponCode" style="text-transform:uppercase;" required></div>
+        <div class="form-row-2">
+          <div class="form-group"><label>Type</label>
+            <select id="couponType"><option value="Percentage">Percentage (%)</option><option value="Fixed">Fixed (PKR)</option></select>
+          </div>
+          <div class="form-group"><label>Value *</label><input type="number" id="couponValue" min="0" required></div>
+        </div>
+        <div class="form-row-2">
+          <div class="form-group"><label>Expiry Date</label><input type="date" id="couponExpiry"></div>
+          <div class="form-group"><label>Usage Limit (optional)</label><input type="number" id="couponUsageLimit" min="0"></div>
+        </div>
+        <div class="form-group" style="display:flex; align-items:center; gap:0.75rem;">
+          <label class="switch"><input type="checkbox" id="couponActive" checked><span class="slider"></span></label>
+          <label style="margin:0;">Active</label>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline" onclick="closeCouponModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Coupon</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ================= CATEGORY MODAL ================= -->
+<div class="modal-overlay" id="categoryModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="categoryModalTitle">Add Category</h3><button class="modal-close" onclick="closeCategoryModal()"><i data-lucide="x"></i></button></div>
+    <form id="categoryForm">
+      <div class="modal-body">
+        <input type="hidden" id="categoryDocId">
+        <div class="form-group"><label>Name *</label><input type="text" id="categoryName" required></div>
+        <div class="form-group"><label>Type</label>
+          <select id="categoryType">
+            <option value="category">Category</option>
+            <option value="class">Class</option>
+            <option value="subject">Subject</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline" onclick="closeCategoryModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Category</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ================= ADMIN MODAL ================= -->
+<div class="modal-overlay" id="adminModal">
+  <div class="modal-box">
+    <div class="modal-head"><h3>Add Admin</h3><button class="modal-close" onclick="closeAdminModal()"><i data-lucide="x"></i></button></div>
+    <form id="adminForm">
+      <div class="modal-body">
+        <p class="perm-banner"><i data-lucide="info"></i> Pehle Firebase Console → Authentication → Add User se unka email/password bana lein, phir unka User UID neeche paste karen.</p>
+        <div class="form-group"><label>User UID *</label><input type="text" id="adminUid" class="mono" required></div>
+        <div class="form-group"><label>Name</label><input type="text" id="adminName"></div>
+        <div class="form-group"><label>Email *</label><input type="email" id="adminEmail" required></div>
+        <div class="form-group"><label>Role</label>
+          <select id="adminRole"><option value="staff">Staff</option><option value="owner">Owner</option></select>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline" onclick="closeAdminModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Admin</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- ================= ADD COURSE BOOK(S) MODAL ================= -->
+<div class="modal-overlay" id="courseBookModal">
+  <div class="modal-box" style="max-width:560px;">
+    <div class="modal-head">
+      <h3 id="courseBookModalTitle">Add Course Book(s) to Syllabus</h3>
+      <button class="modal-close" onclick="closeCourseBookModal()"><i data-lucide="x"></i></button>
+    </div>
+    <form id="courseBookForm" onsubmit="saveCourseBookForm(event)">
+      <div class="modal-body">
+        <p class="perm-banner"><i data-lucide="info"></i> Kisi bhi school aur class ke liye nayi book ya multiple books add karein. Yeh foran storefront aur search mein show hongi.</p>
+        
+        <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:14px;">
+          <div class="form-group">
+            <label>School Name *</label>
+            <input type="text" id="bookSchoolInput" list="schoolDatalist" placeholder="Select or type School Name..." required>
+            <datalist id="schoolDatalist">
+              <option value="Beaconhouse School"></option>
+              <option value="The City School"></option>
+              <option value="The Educators"></option>
+              <option value="Foundation Public School"></option>
+              <option value="Habib Girls School"></option>
+              <option value="Mama Parsi School"></option>
+              <option value="Aga Khan School"></option>
+              <option value="Karachi Public School"></option>
+              <option value="Dawood Public School"></option>
+              <option value="BVS Parsi High School"></option>
+              <option value="AMI School"></option>
+              <option value="Happy Home School (Matric)"></option>
+              <option value="Happy Home School (O Level)"></option>
+              <option value="Head Start School"></option>
+              <option value="Delsol School"></option>
+              <option value="River Oaks"></option>
+              <option value="Alpha High School"></option>
+              <option value="Alpha Core School"></option>
+              <option value="Alpha Prime School"></option>
+              <option value="Alpha Girls School"></option>
+            </datalist>
+          </div>
+          <div class="form-group">
+            <label>Class / Grade *</label>
+            <select id="bookClassSelect" required>
+              <option value="Playgroup">Playgroup</option>
+              <option value="Nursery">Nursery</option>
+              <option value="KG">KG / Prep</option>
+              <option value="Class 1">Class 1</option>
+              <option value="Class 2">Class 2</option>
+              <option value="Class 3">Class 3</option>
+              <option value="Class 4">Class 4</option>
+              <option value="Class 5">Class 5</option>
+              <option value="Class 6">Class 6</option>
+              <option value="Class 7">Class 7</option>
+              <option value="Class 8">Class 8</option>
+              <option value="Class 9">Class 9 (Matric)</option>
+              <option value="Class 10">Class 10 (Matric)</option>
+              <option value="O Level 1">O Level 1</option>
+              <option value="O Level 2">O Level 2</option>
+              <option value="A Level">A Level</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Book Title(s) * (Multiple books ke liye har line par ek book likhein)</label>
+          <textarea id="bookTitlesTextarea" rows="4" placeholder="e.g.&#10;Oxford Progressive English Book 4&#10;New Countdown Book 4&#10;Amazing Science Book 4" required></textarea>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <div class="form-group">
+            <label>Price Per Book (PKR) *</label>
+            <input type="number" id="bookUnitPrice" placeholder="e.g. 850" required>
+          </div>
+          <div class="form-group">
+            <label>Stock Status</label>
+            <select id="bookStockSelect">
+              <option value="true">In Stock</option>
+              <option value="false">Out of Stock</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline" onclick="closeCourseBookModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary"><i data-lucide="check"></i> Add Books to Syllabus</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ================= TOAST ================= -->
+
+<!-- ================= COURSE PACK MODAL ================= -->
+<div class="modal-overlay" id="courseModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3 id="courseModalTitle">Add School Course Pack</h3>
+      <button class="modal-close" onclick="closeCourseModal()"><i data-lucide="x"></i></button>
+    </div>
+    <form id="courseForm" onsubmit="saveCourseForm(event)">
+      <div class="modal-body">
+        <input type="hidden" id="courseDocId">
+        
+        <div class="form-group" style="display:flex; align-items:center; gap:16px; margin-bottom:14px; background:rgba(255,255,255,0.03); padding:10px 14px; border-radius:10px; border:1px solid var(--border-color);">
+          <div style="width:64px; height:64px; border-radius:8px; border:1px solid var(--border-color); background:#f8fafc; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <img id="courseImgPreview" src="../assets/images/studypack_logo.png" style="width:100%; height:100%; object-fit:contain;">
+          </div>
+          <div style="flex:1;">
+            <label style="font-size:12px; font-weight:700; margin-bottom:4px; display:block;">Book / Course Pack Cover Image</label>
+            <input type="file" id="courseImgFile" accept="image/*" style="font-size:12px; margin-bottom:4px;">
+            <input type="hidden" id="courseImg">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Course Title *</label>
+          <input type="text" id="courseTitle" placeholder="e.g. Beaconhouse Class 4 Complete Course Set" required>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <div class="form-group">
+            <label>School Name *</label>
+            <input type="text" id="courseSchool" placeholder="e.g. Beaconhouse School" required>
+          </div>
+          <div class="form-group">
+            <label>Class / Grade *</label>
+            <input type="text" id="courseClass" placeholder="e.g. Class 4" required>
+          </div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <div class="form-group">
+            <label>Price (PKR) *</label>
+            <input type="number" id="coursePrice" placeholder="e.g. 5450" required>
+          </div>
+          <div class="form-group">
+            <label>Stock Status</label>
+            <select id="courseStock">
+              <option value="true">In Stock</option>
+              <option value="false">Out of Stock</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline" onclick="closeCourseModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Course Pack</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ================= COURSE BULK PRICE MODAL ================= -->
+<div class="modal-overlay" id="courseBulkPriceModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h3>School Courses Bulk Price Adjuster</h3>
+      <button class="modal-close" onclick="closeCourseBulkPriceModal()"><i data-lucide="x"></i></button>
+    </div>
+    <form onsubmit="applyCourseBulkPrice(event)">
+      <div class="modal-body">
+        <p class="perm-banner"><i data-lucide="info"></i> Kisi specific school ya tamam school courses ki prices ko ek sath percent se increase ya decrease karein.</p>
+        <div class="form-group">
+          <label>Select Target School</label>
+          <select id="bulkSchoolSelect">
+            <option value="">All 36 Schools</option>
+            <option value="Beaconhouse School">Beaconhouse School</option>
+            <option value="The City School">The City School</option>
+            <option value="The Educators">The Educators</option>
+            <option value="Foundation Public School">Foundation Public School</option>
+            <option value="Habib Girls School">Habib Girls School</option>
+            <option value="Mama Parsi School">Mama Parsi School</option>
+            <option value="Aga Khan School">Aga Khan School</option>
+            <option value="Karachi Public School">Karachi Public School</option>
+            <option value="Dawood Public School">Dawood Public School</option>
+            <option value="BVS Parsi High School">BVS Parsi High School</option>
+            <option value="Happy Home School (Matric)">Happy Home School (Matric)</option>
+            <option value="Happy Home School (O Level)">Happy Home School (O Level)</option>
+          </select>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+          <div class="form-group">
+            <label>Action</label>
+            <select id="bulkCourseAction">
+              <option value="inc">📈 Increase (+%)</option>
+              <option value="dec">📉 Decrease (-%)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Percentage (%) *</label>
+            <input type="number" id="bulkCoursePercent" value="10" min="1" max="100" required>
+          </div>
+        </div>
+      </div>
+      <div class="modal-foot">
+        <button type="button" class="btn btn-outline" onclick="closeCourseBulkPriceModal()">Cancel</button>
+        <button type="submit" class="btn btn-primary">Apply Price Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><span id="toastMsg">Saved</span></div>
+
+<!-- ================= SCRIPTS ================= -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+
+<script src="/dashboard/js/firebase-init.js?v=25"></script>
+<script src="/dashboard/js/auth.js?v=25"></script>
+<script src="/dashboard/js/data.js?v=25"></script>
+<script src="/dashboard/js/livechat.js?v=25"></script>
+<script src="/dashboard/js/app.js?v=25"></script>
+
+<script src="/assets/js/scraped-books.js?v=25"></script>
+<script src="/assets/js/scraped-courses.js?v=25"></script>
+<script src="/assets/js/scraped-stationery.js?v=25"></script>
+<script src="/assets/js/scraped-toys.js?v=25"></script>
+<script src="/assets/js/scraped-afaq.js?v=25"></script>
+<script src="/dashboard/js/courses.js?v=25"></script>
+<script src="/dashboard/js/price_adjuster.js?v=25"></script>
+
+<script src="/dashboard/js/dashboard-view.js?v=25"></script>
+<script src="/dashboard/js/products.js?v=25"></script>
+<script src="/dashboard/js/orders.js?v=25"></script>
+<script src="/dashboard/js/customers.js?v=25"></script>
+<script src="/dashboard/js/inventory.js?v=25"></script>
+<script src="/dashboard/js/coupons.js?v=25"></script>
+<script src="/dashboard/js/categories.js?v=25"></script>
+<script src="/dashboard/js/reports.js?v=25"></script>
+<script src="/dashboard/js/settings.js?v=25"></script>
+
+</body>
+</html>

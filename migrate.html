@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Migrate Data to Firebase</title>
+<!-- Firebase v8 Compat -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <link rel="stylesheet" href="assets/css/chatbot.css">
+  <!-- ================= GOOGLE ANALYTICS 4 & TAG MANAGER ================= -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-TKGDCBNN7Q"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-TKGDCBNN7Q', {'send_page_view': true});
+    gtag('config', 'AW-5853320780596230');
+  </script>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-NV7KNKN');</script>
+  <!-- End Google Tag Manager -->
+
+  <!-- ================= ADVANCED ENTITY, GEO & AEO META TAGS ================= -->
+  <meta name="author" content="Study Pack by TaleemiHub">
+  <meta name="geo.region" content="PK-SD">
+  <meta name="geo.placename" content="Karachi, Pakistan">
+  <meta name="geo.position" content="24.8607;67.0011">
+  <meta name="ICBM" content="24.8607, 67.0011">
+  <meta name="keywords" content="Online Books Pakistan, Buy Oxford Books, Oxford Countdown, Cambridge Books Karachi, Beaconhouse Course Books, The Educators Books, School Syllabi Pakistan, Stationery Online Pakistan, Paramount Books, Spectrum Books, Fast Book Delivery Pakistan">
+  
+  <!-- Open Graph & Social Cards -->
+  <meta property="og:site_name" content="Study Pack">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_PK">
+  <meta property="og:image" content="https://studypack.taleemihub.com/assets/images/studypack_logo.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@StudyPackPK">
+
+  <!-- ================= RICH ENTITY & AEO STRUCTURED DATA (JSON-LD) ================= -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BookStore",
+        "@id": "https://studypack.taleemihub.com/#organization",
+        "name": "Study Pack",
+        "alternateName": ["StudyPack Pakistan", "Study Pack TaleemiHub", "Online School Bookstore"],
+        "url": "https://studypack.taleemihub.com",
+        "logo": "https://studypack.taleemihub.com/assets/images/studypack_logo.png",
+        "image": "https://studypack.taleemihub.com/assets/images/studypack_logo.png",
+        "description": "Pakistan leading online educational bookstore for official school syllabi, Oxford University Press, Paramount, Spectrum, Beaconhouse, The Educators, Cambridge O/A levels books, educational toys, and stationery with nationwide Cash on Delivery (COD).",
+        "telephone": "+92-333-1310234",
+        "email": "info@taleemihub.com",
+        "priceRange": "PKR 100 - PKR 15000",
+        "paymentAccepted": ["Cash on Delivery", "Bank Transfer", "JazzCash", "EasyPaisa"],
+        "currenciesAccepted": "PKR",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Karachi, Sindh",
+          "addressLocality": "Karachi",
+          "addressRegion": "Sindh",
+          "postalCode": "75500",
+          "addressCountry": "PK"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://studypack.taleemihub.com/#website",
+        "url": "https://studypack.taleemihub.com",
+        "name": "Study Pack Online Bookstore",
+        "publisher": { "@id": "https://studypack.taleemihub.com/#organization" },
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://studypack.taleemihub.com/books.html?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://studypack.taleemihub.com/#faq",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Where can I buy Oxford and Cambridge school books online in Pakistan?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "You can buy genuine Oxford University Press (OUP), Cambridge, Paramount, and Spectrum books directly on Study Pack (studypack.taleemihub.com) with home delivery across Karachi, Lahore, Islamabad, and all cities in Pakistan."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How can I order complete school course packs for Beaconhouse and The Educators?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Study Pack provides complete pre-packaged school course syllabus bundles for Beaconhouse, The Educators, City School, and Foundation Public School. Simply select your school and grade level to order the entire pack in one click."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What is the delivery time and COD policy?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "We deliver in 1-2 working days in Karachi and 2-4 working days across Pakistan with Cash on Delivery (COD) available nationwide."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="assets/css/whatsapp.css">
+
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NV7KNKN"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <h1>Data Migration to Firestore</h1>
+  <p>Status: <span id="status">Loading data...</span></p>
+  <button id="startBtn" disabled>Start Migration</button>
+
+  <!-- Load the massive BOOKS array -->
+  <script src="assets/js/main.js?v=10"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyD3cl7bxjuLoILxck4di-w6fLw4aRXHb9M",
+      authDomain: "study-pack-store.firebaseapp.com",
+      projectId: "study-pack-store",
+      storageBucket: "study-pack-store.firebasestorage.app",
+      messagingSenderId: "346606609514",
+      appId: "1:346606609514:web:31ca9e21967e6b1d4f5613"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    const statusEl = document.getElementById('status');
+    const startBtn = document.getElementById('startBtn');
+
+    if (typeof BOOKS !== 'undefined') {
+        statusEl.innerText = `Loaded ${BOOKS.length} products. Ready to migrate.`;
+        startBtn.disabled = false;
+    } else {
+        statusEl.innerText = "Error: BOOKS array not found.";
+    }
+
+    startBtn.addEventListener('click', async () => {
+        startBtn.disabled = true;
+        statusEl.innerText = "Migrating... Please do not close this tab.";
+        
+        let batch = db.batch();
+        let count = 0;
+        let total = 0;
+        const limit = 400; // Firebase batch limit is 500, using 400 to be safe
+        
+        try {
+            for (let i = 0; i < BOOKS.length; i++) {
+                const docRef = db.collection('products').doc(String(BOOKS[i].id));
+                batch.set(docRef, BOOKS[i]);
+                count++;
+                total++;
+
+                if (count >= limit || i === BOOKS.length - 1) {
+                    statusEl.innerText = `Committing batch... (${total} / ${BOOKS.length})`;
+                    await batch.commit();
+                    batch = db.batch();
+                    count = 0;
+                }
+            }
+            
+            // Also create some dummy orders
+            const orders = [
+                {id: 1001, customer: 'John Doe', email: 'john@example.com', date: Date.now() - 5000000, status: 'Processing', total: 45.00, items: [{title: 'Modern Web Design', qty: 1, price: 45.00}]},
+                {id: 1002, customer: 'Jane Smith', email: 'jane@example.com', date: Date.now() - 90000000, status: 'Completed', total: 100.00, items: [{title: 'Introduction to Algorithms', qty: 1, price: 85.00}, {title: 'The Great Gatsby', qty: 1, price: 15.00}]}
+            ];
+            for (let o of orders) {
+                await db.collection('orders').doc(String(o.id)).set(o);
+            }
+            
+            statusEl.innerText = `Migration Complete! Successfully uploaded ${total} products and demo orders.`;
+            statusEl.style.color = "green";
+        } catch (e) {
+            console.error(e);
+            statusEl.innerText = "Error: " + e.message;
+            statusEl.style.color = "red";
+        }
+    });
+  </script>
+  <script src="assets/js/chatbot.js" defer></script>
+  <script src="assets/js/whatsapp.js" defer></script>
+</body>
+</html>

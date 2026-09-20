@@ -1,0 +1,37 @@
+# Enable Rewrite Engine
+RewriteEngine On
+RewriteBase /
+
+# Default Index File
+DirectoryIndex index.html books.html
+
+# 1. Clean Dashboard URL: Redirect /dashboard/index.html or /dashboard/index or /dashboard/ to /dashboard
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+dashboard/(index(\.html)?)?[\s\?] [NC]
+RewriteRule ^dashboard/(index(\.html)?)?$ /dashboard [R=301,L]
+
+# 2. Clean Root URL: Redirect /index.html or /index to /
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+index(\.html)?[\s\?] [NC]
+RewriteRule ^index(\.html)?$ / [R=301,L]
+
+# 3. Clean Pages URL: Strip .html extension (e.g. /books.html -> /books)
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+(.+)\.html[\s\?] [NC]
+RewriteRule ^(.+)\.html$ /$1 [R=301,L]
+
+# 4. Internal Rewrite: /dashboard -> /dashboard/index.html
+RewriteRule ^dashboard/?$ dashboard/index.html [L]
+
+# 5. Internal Rewrite: /books -> books.html
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.html -f
+RewriteRule ^([^\.]+)$ $1.html [NC,L]
+
+# Security, SEO & Caching HTTP Headers
+<IfModule mod_headers.c>
+    # 1. Global X-Robots-Tag for Search Engines
+    Header set X-Robots-Tag "all, index, follow"
+    
+    # 2. Security Headers
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+</IfModule>

@@ -1,0 +1,38 @@
+# Dependencies & Builds
+node_modules/
+venv/
+__pycache__/
+.vercel/
+
+# Local Python & Root JS test scripts / scrapers
+*.py
+*.js
+!assets/**/*.js
+!dashboard/**/*.js
+*.log
+*.tmp
+*.crdownload
+*.wpress
+*.txt
+*.csv
+*.json
+!assets/**/*.json
+!package.json
+
+# Local scratch / test files / images
+scratch/
+files (2)/
+*.png
+!assets/images/**/*.png
+*.jpg
+!assets/images/**/*.jpg
+
+# AI / IDE / System
+.gemini/
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+
+# Archives
+*.zip

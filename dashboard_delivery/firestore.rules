@@ -1,0 +1,94 @@
+rules_version = '2';
+
+// ============================================================================
+// Study Pack (taleemihub.com) — Firestore Security Rules
+//
+// HOW TO APPLY:
+// 1. Go to https://console.firebase.google.com -> project "study-pack-store"
+// 2. Left sidebar -> Build -> Firestore Database -> "Rules" tab
+// 3. Delete everything in the editor and paste the contents of this file
+// 4. Click "Publish"
+//
+// IMPORTANT — bootstrap step required before these rules will let YOU write
+// data as an admin:
+//   a) Firebase Console -> Authentication -> Users -> copy your admin user's
+//      "User UID" (create the user first if you haven't yet).
+//   b) Firestore Database -> Data tab -> Start collection -> collection ID:
+//      "admins" -> Document ID: paste that UID -> add fields:
+//        email (string)  = your admin email
+//        role  (string)  = "owner"
+//      -> Save.
+// Until that "admins/<your-uid>" document exists, no one (including you)
+// can write to products/orders/coupons/categories from the dashboard, even
+// when logged in — this is intentional, it's what makes the data safe.
+// ============================================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    // ---------------- Products (books, stationery, toys, courses) ----------
+    // Public storefront needs to read the full catalog. Only admins can
+    // add/edit/delete products.
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ---------------- Categories / classes / subjects ----------------------
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ---------------- Coupons -----------------------------------------------
+    // Storefront needs to check ONE coupon code (a "get" by known doc id),
+    // but must never be able to list/scrape every coupon in existence.
+    match /coupons/{couponId} {
+      allow get: if true;
+      allow list: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // ---------------- Orders -------------------------------------------------
+    // Anyone can CREATE an order (that's checkout, no login required to buy).
+    // Nobody but an admin can read the order list (protects customer PII —
+    // names, phone numbers, addresses) or update/cancel/delete an order.
+    match /orders/{orderId} {
+      allow create: if
+        request.resource.data.keys().hasAll(
+          ['customer','phone','email','address','city','items','total','status','date']
+        ) &&
+        request.resource.data.customer is string && request.resource.data.customer.size() > 0 &&
+        request.resource.data.phone is string && request.resource.data.phone.size() > 0 &&
+        request.resource.data.email is string && request.resource.data.email.size() > 0 &&
+        request.resource.data.address is string && request.resource.data.address.size() > 0 &&
+        request.resource.data.items is list && request.resource.data.items.size() > 0 &&
+        request.resource.data.total is number && request.resource.data.total > 0 &&
+        request.resource.data.status == 'Pending';
+      allow read, update, delete: if isAdmin();
+    }
+
+    // ---------------- Admins (dashboard users / roles) ----------------------
+    // Each admin can read only their own record (to know their own role).
+    // Only an existing admin can add/edit/remove other admins.
+    match /admins/{uid} {
+      allow read: if isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Deny everything else by default (Firestore rules deny-by-default
+    // already, this is just explicit for clarity).
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

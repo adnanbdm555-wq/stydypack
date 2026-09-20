@@ -1,0 +1,1 @@
+// search.js functionality is now handled by search_logic.js

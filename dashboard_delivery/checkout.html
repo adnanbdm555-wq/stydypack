@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Study Pack Store</title>
+<meta name="description" content="Secure checkout for Study Pack Store — enter your shipping details and choose a payment method to complete your order.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/global.css?v=6">
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+<meta property="og:title" content="Checkout — Study Pack Store">
+<meta property="og:description" content="Study Pack Store is Pakistan's premium online bookstore for genuine school, college and university textbooks, eBooks and exam-prep guides with nationwide delivery.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://studypack.taleemihub.com/checkout.html">
+<meta property="og:image" content="https://studypack.taleemihub.com/assets/images/og-image.jpg">
+
+<style>
+/* ABSOLUTE MOBILE GRID FIX */
+@media (max-width: 760px) {
+  .shop-product-grid, .product-grid, .ebook-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Premium Glass Menu -->
+<div id="glassMenu" class="glass-menu-overlay">
+  <button id="glassCloseBtn" class="glass-close-btn" aria-label="Close Menu" style="position: absolute; top: 24px; right: 24px; width: 44px; height: 44px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; color: #111827; z-index: 100; box-shadow: 0 4px 14px rgba(0,0,0,0.15); border: none; cursor: pointer; transition: 0.3s;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+  </button>
+  <div class="gm-links">
+    <a href="index.html" class="gm-link"><span class="gm-text">Home</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <a href="books.html" class="gm-link"><span class="gm-text">Books</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <a href="stationery.html" class="gm-link"><span class="gm-text">Stationery</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <a href="toys.html" class="gm-link"><span class="gm-text">Toys &amp; Gifts</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <a href="express.html" class="gm-link"><span class="gm-text">Express Delivery</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+    <a href="contact.html" class="gm-link"><span class="gm-text">Contact</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+  </div>
+</div>
+<div id="preloader"><div class="pl-book"><span></span><span></span><span></span></div><div class="pl-label">Study Pack</div></div>
+<!-- ================= NAVBAR ================= -->
+<header class="nav" id="siteNav">
+  <div class="container">
+    <div class="navbar">
+      <a href="index.html" class="logo">
+        <img src="assets/images/logo.png" alt="Study Pack Logo" style="height: 38px; width: auto; object-fit: contain;">
+        <span>Study Pack</span>
+      </a>
+      <form class="nav-search-bar" onsubmit="event.preventDefault(); const q = this.querySelector('input').value.trim(); if(q) window.location.href='books.html?q='+encodeURIComponent(q); else window.location.href='books.html';">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input type="text" placeholder="Search books, stationery, toys...">
+        <button type="submit">Search</button>
+      </form>
+      <nav class="nav-links">
+  <a href="index.html#categories">Categories</a><a href="books.html">Books</a><a href="stationery.html">Stationery</a><a href="toys.html">Toys</a><a href="express.html">Express</a><a href="why.html">Why Us</a><a href="contact.html">Contact</a>
+</nav>
+      <div class="nav-actions">
+        
+        <button class="icon-btn" id="cartBtn" aria-label="Cart" onclick="document.getElementById('cartDrawer').classList.add('show'); document.getElementById('cartOverlay').classList.add('show');">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+          <span class="badge-count" id="cartCount">0</span>
+        </button>
+        <button class="icon-btn top-burger-btn" id="topBurger" aria-label="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ================= PAGE HERO ================= -->
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb reveal"><a href="index.html">Home</a><span class="sep">/</span><a href="books.html">Cart</a><span class="sep">/</span><span class="cur">Checkout</span></div>
+    <h1 class="reveal">Secure <span class="grad">Checkout</span></h1>
+    <p class="lead reveal">Almost there — confirm your delivery details and payment method to complete your order.</p>
+  </div>
+</section>
+
+<!-- ================= CHECKOUT ================= -->
+<section class="section grey" style="padding-top:44px;">
+  <div class="container">
+
+    <div id="checkoutEmptyState" class="checkout-empty" style="display:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+      <h3>Your cart is empty</h3>
+      <p>Add a few books before heading to checkout.</p>
+      <a href="books.html" class="btn-primary" style="background:var(--grad-brand); color:#fff;">Browse Books</a>
+    </div>
+
+    <div id="checkoutContent" class="checkout-layout">
+      <!-- LEFT: FORM -->
+      <div>
+        <form id="checkoutForm" onsubmit="return placeOrder(event)">
+          <div class="checkout-card reveal">
+            <h3><span class="num">1</span> Delivery Details</h3>
+            <p class="sub">Where should we send your order?</p>
+            <div class="form-row" class="co-indented">
+              <div class="form-field"><label>Full Name</label><input type="text" id="coName" placeholder="Your name" required></div>
+              <div class="form-field"><label>Phone Number</label><input type="tel" id="coPhone" placeholder="+92 3XX XXXXXXX" required></div>
+            </div>
+            <div class="form-row" class="co-indented">
+              <div class="form-field full"><label>Email Address</label><input type="email" id="coEmail" placeholder="you@email.com" required></div>
+            </div>
+            <div class="form-row" class="co-indented">
+              <div class="form-field full"><label>Street Address</label><input type="text" id="coAddress" placeholder="House #, street, area" required></div>
+            </div>
+            <div class="form-row" class="co-indented">
+              <div class="form-field"><label>City</label><input type="text" id="coCity" placeholder="e.g. Karachi" required></div>
+              <div class="form-field">
+                <label>Province</label>
+                <select id="coProvince" required>
+                  <option value="">Select province</option>
+                  <option>Sindh</option>
+                  <option>Punjab</option>
+                  <option>Khyber Pakhtunkhwa</option>
+                  <option>Balochistan</option>
+                  <option>Islamabad Capital Territory</option>
+                  <option>Gilgit-Baltistan</option>
+                  <option>Azad Kashmir</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-row" class="co-indented">
+              <div class="form-field full"><label>Order Notes (optional)</label><input type="text" id="coNotes" placeholder="Delivery instructions, landmark, etc."></div>
+            </div>
+          </div>
+
+          <div class="checkout-card reveal">
+            <h3><span class="num">2</span> Payment Method</h3>
+            <p class="sub">Choose how you'd like to pay.</p>
+            <div class="pay-grid">
+              <label class="pay-opt checked" data-val="cod">
+                <input type="radio" name="payMethod" value="cod" checked>
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><path d="M16 8h4l3 3v5h-7V8z"/></svg></span>
+                <span class="lbl"><b>Cash on Delivery</b><span>Pay when it arrives</span></span>
+                <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
+              </label>
+              <label class="pay-opt" data-val="jazzcash">
+                <input type="radio" name="payMethod" value="jazzcash">
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+                <span class="lbl"><b>JazzCash</b><span>Mobile wallet</span></span>
+                <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
+              </label>
+              <label class="pay-opt" data-val="easypaisa">
+                <input type="radio" name="payMethod" value="easypaisa">
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></span>
+                <span class="lbl"><b>EasyPaisa</b><span>Mobile wallet</span></span>
+                <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
+              </label>
+              <label class="pay-opt" data-val="card">
+                <input type="radio" name="payMethod" value="card">
+                <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg></span>
+                <span class="lbl"><b>Credit / Debit Card</b><span>Visa, Mastercard</span></span>
+                <span class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></span>
+              </label>
+            </div>
+            <div class="form-row" id="cardFields" class="co-indented" style="margin-top:18px; display:none;">
+              <div class="form-field full"><label>Card Number</label><input type="text" placeholder="1234 5678 9012 3456" inputmode="numeric" maxlength="19"></div>
+              <div class="form-field"><label>Expiry</label><input type="text" placeholder="MM/YY" maxlength="5"></div>
+              <div class="form-field"><label>CVV</label><input type="text" placeholder="123" maxlength="3" inputmode="numeric"></div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <!-- RIGHT: ORDER SUMMARY -->
+      <aside class="order-summary reveal">
+        <h3>Order Summary</h3>
+        <div class="oi-list" id="oiList"></div>
+        <div class="coupon-row" style="margin-bottom:16px;">
+          <input type="text" placeholder="Coupon code">
+          <button type="button" onclick="showToast('Coupon applied!')">Apply</button>
+        </div>
+        <div class="sum-row"><span>Subtotal</span><span id="coSub">Rs 0</span></div>
+        <div class="sum-row"><span>Delivery</span><span id="coShip">Rs 0</span></div>
+        <div class="sum-row total"><span>Total</span><span id="coTotal">Rs 0</span></div>
+        <button type="submit" form="checkoutForm" class="btn-checkout" id="placeOrderBtn">Place Order</button>
+        <div class="hero-badges" style="margin-top:18px; justify-content:center;">
+          <div class="mini-badge" style="color:var(--muted);"><span class="ic" style="background:rgba(21,101,192,.08);"><svg viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" width="15" height="15"><path d="M12 2 3 6v6c0 5 4 8.5 9 10 5-1.5 9-5 9-10V6z"/></svg></span> Secure &amp; Encrypted</div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer id="footer">
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-about">
+        <a href="index.html" class="logo">
+          <img src="assets/images/logo.png" alt="Study Pack Logo" style="height: 38px; width: auto; object-fit: contain;">
+          <span>Study Pack</span>
+        </a>
+        <p>Pakistan's premium online bookstore for school, college and university students — genuine books, fast delivery.</p>
+        <div class="soc-row">
+          <a href="#" aria-label="Facebook"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+          <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="4"/><path d="m10 9 5 3-5 3z"/></svg></a>
+        </div>
+      </div>
+      <div><h5>Shop</h5><ul><li><a href="books.html">School Books</a></li><li><a href="books.html">College Books</a></li><li><a href="books.html">University Books</a></li><li></li><li><a href="books.html">Stationery Kits</a></li></ul></div>
+      <div><h5>Categories</h5><ul><li><a href="books.html">Cambridge</a></li><li><a href="books.html">Matric / FSC</a></li><li><a href="books.html">O &amp; A Level</a></li><li><a href="books.html">Competitive Exams</a></li><li><a href="books.html">Islamic Studies</a></li></ul></div>
+      <div><h5>Support</h5><ul><li><a href="contact.html">Contact Us</a></li><li><a href="contact.html#faq">FAQs</a></li><li><a href="contact.html">Shipping Policy</a></li><li><a href="contact.html">Return Policy</a></li><li><a href="contact.html">Track Order</a></li></ul></div>
+      <div><h5>Company</h5><ul><li><a href="why.html">About Us</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms &amp; Conditions</a></li><li><a href="why.html#team">Careers</a></li></ul></div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Study Pack Store. All rights reserved.</span>
+      <div class="pay-icons"><span>Visa</span><span>JazzCash</span><span>EasyPaisa</span><span>COD</span><span>PayPal</span></div>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= CART DRAWER ================= -->
+<div class="cart-overlay" id="cartOverlay"></div>
+<aside class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <h3>Your Cart</h3>
+    <button class="icon-btn" id="closeCart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty" id="cartEmpty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6"/></svg>
+      <p>Your cart is empty. Start adding books!</p>
+    </div>
+  </div>
+  <div class="cart-foot">
+    <div class="coupon-row">
+      <input type="text" placeholder="Coupon code">
+      <button onclick="showToast('Coupon applied!')">Apply</button>
+    </div>
+    <div class="sum-row"><span>Subtotal</span><span id="sumSub">Rs 0</span></div>
+    <div class="sum-row"><span>Delivery</span><span id="sumShip">Rs 0</span></div>
+    <div class="sum-row total"><span>Total</span><span id="sumTotal">Rs 0</span></div>
+    <button class="btn-checkout" onclick="window.location.href='checkout.html'">Proceed to Checkout</button>
+  </div>
+</aside>
+
+<!-- ================= QUICK VIEW MODAL ================= -->
+<div class="modal-overlay" id="qvOverlay">
+  <div class="qv-modal" id="qvModal"></div>
+</div>
+
+<!-- ================= SUCCESS MODAL ================= -->
+<div class="success-overlay" id="successOverlay">
+  <div class="success-modal">
+    <div class="success-tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M20 6 9 17l-5-5"/></svg></div>
+    <h3>Order Placed Successfully!</h3>
+    <p>Thank you — a confirmation has been sent to your email.</p>
+    <div class="oid" id="orderIdDisplay">Order #EB-000000</div>
+    <div class="success-actions">
+      <a href="index.html" class="btn-outline" style="border-color:var(--blue); color:var(--blue);">Back to Home</a>
+      <a href="books.html" class="btn-primary" style="background:var(--grad-brand); color:#fff;">Continue Shopping</a>
+    </div>
+  </div>
+</div>
+
+
+<!-- ================= UPSELL MODAL ================= -->
+<div class="modal-overlay" id="upsellOverlay">
+  <div class="qv-modal" style="display:flex; flex-direction:column; align-items:center; text-align:center; padding: clamp(20px, 5vw, 40px); background: linear-gradient(135deg, #fcecd7, #dbeafe);">
+    <button class="modal-close" onclick="document.getElementById('upsellOverlay').classList.remove('show')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    <h2 style="font-size: clamp(24px, 6vw, 32px); color: var(--navy); margin-bottom: 10px;">Before You Go!</h2>
+    <p style="color: var(--muted); font-size: 16px; margin-bottom: 30px; max-width: 400px;">Get more items to complete your Study Pack! Grab some cool toys and stationery.</p>
+    
+    <div class="scene-3d" style="margin: 0 auto; margin-bottom: 40px; width: 100%; max-width: 300px; height: clamp(200px, 60vw, 300px); display: flex; align-items: center; justify-content: center; perspective: 1200px;">
+      <!-- JS will inject carousel here -->
+    </div>
+    
+    <div style="display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; width: 100%;">
+      <a href="toys.html" class="btn-primary" style="background:var(--grad-brand); color:#fff; padding: 12px 24px; text-decoration:none;">Shop Toys</a>
+      <a href="stationery.html" class="btn-primary" style="background:var(--navy); color:#fff; padding: 12px 24px; text-decoration:none;">Shop Stationery</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg><span id="toastMsg">Added to cart</span></div>
+<script src="assets/js/main.js??v=4"></script>
+<script src="assets/js/store.js??v=4"></script>
+
+<script>
+/* ============ CHECKOUT.HTML — order summary, payment selection, place order ============ */
+function renderCheckoutSummary(){
+  const content = document.getElementById('checkoutContent');
+  const empty = document.getElementById('checkoutEmptyState');
+  if(cart.length===0){
+    content.style.display='none';
+    empty.style.display='block';
+    return;
+  }
+  content.style.display='';
+  empty.style.display='none';
+
+  const oiList = document.getElementById('oiList');
+  oiList.innerHTML = cart.map(c => `
+    <div class="oi-item">
+      <div class="oi-cover" style="background:${c.img ? `url('${c.img}') center/cover no-repeat` : c.grad}"></div>
+      <div class="oi-info">
+        <div class="n">${c.title}</div>
+        <div class="m">Qty ${c.qty} · ${c.cls}</div>
+      </div>
+      <div class="oi-price">${money(c.price*c.qty)}</div>
+    </div>
+  `).join('');
+
+  const sub = cart.reduce((s,c)=>s+c.price*c.qty,0);
+  const ship = sub>0 ? (sub>2000?0:150) : 0;
+  document.getElementById('coSub').textContent = money(sub);
+  document.getElementById('coShip').textContent = ship===0 ? 'Free' : money(ship);
+  document.getElementById('coTotal').textContent = money(sub+ship);
+}
+
+/* Payment method selection */
+document.querySelectorAll('.pay-opt').forEach(opt=>{
+  opt.addEventListener('click', function(){
+    document.querySelectorAll('.pay-opt').forEach(o=>o.classList.remove('checked'));
+    this.classList.add('checked');
+    this.querySelector('input').checked = true;
+    const cardFields = document.getElementById('cardFields');
+    cardFields.style.display = this.dataset.val === 'card' ? 'grid' : 'none';
+  });
+});
+
+async function placeOrder(e){
+  e.preventDefault();
+  if(cart.length===0){ showToast('Your cart is empty'); return false; }
+
+  const btn = document.getElementById('placeOrderBtn');
+  const originalBtnText = btn ? btn.textContent : 'Place Order';
+  if(btn){ btn.disabled = true; btn.textContent = 'Placing Order...'; }
+
+  try {
+    if (typeof firebase === 'undefined' || !firebase.apps || !firebase.apps.length) {
+      throw new Error('Could not connect to the server. Please check your internet connection and try again.');
+    }
+    const db = firebase.firestore();
+
+    const name = document.getElementById('coName').value.trim();
+    const phone = document.getElementById('coPhone').value.trim();
+    const email = document.getElementById('coEmail').value.trim();
+    const address = document.getElementById('coAddress').value.trim();
+    const city = document.getElementById('coCity').value.trim();
+    const province = document.getElementById('coProvince').value;
+    const notes = document.getElementById('coNotes').value.trim();
+    const payMethod = (document.querySelector('input[name="payMethod"]:checked') || {}).value || 'cod';
+
+    if(!name || !phone || !email || !address || !city || !province){
+      showToast('Please fill all required fields');
+      return false;
+    }
+
+    const sub = cart.reduce((s,c)=>s+c.price*c.qty,0);
+    const shipping = sub>0 ? (sub>2000?0:150) : 0;
+    const total = sub + shipping;
+
+    const orderId = 'EB-' + Math.floor(100000 + Math.random()*899999);
+
+    const orderItems = cart.map(c => ({
+      id: String(c.id),
+      title: c.title || 'Product',
+      price: Number(c.price) || 0,
+      qty: Number(c.qty) || 1,
+      img: c.img || ''
+    }));
+
+    const orderData = {
+      id: orderId,
+      customer: name,
+      phone: phone,
+      email: email,
+      address: address,
+      city: city,
+      province: province,
+      notes: notes,
+      paymentMethod: payMethod,
+      items: orderItems,
+      subtotal: sub,
+      shipping: shipping,
+      total: total,
+      status: 'Pending',
+      date: Date.now(),
+      source: 'website'
+    };
+
+    // Write the order to Firestore so it shows up in the admin dashboard.
+    // doc(orderId) keeps the human-readable order number as the document ID.
+    await db.collection('orders').doc(orderId).set(orderData);
+
+    document.getElementById('orderIdDisplay').textContent = 'Order #' + orderId;
+    document.getElementById('successOverlay').classList.add('show');
+    cart = [];
+    saveCart();
+    renderCart();
+  } catch(err) {
+    console.error('Order placement failed:', err);
+    showToast('Order place nahi ho saka, dobara koshish karein.');
+  } finally {
+    if(btn){ btn.disabled = false; btn.textContent = originalBtnText; }
+  }
+  return false;
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  renderCheckoutSummary();
+});
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    let extraItems = [];
+    if (typeof TOYS !== 'undefined') extraItems = extraItems.concat(TOYS);
+    if (typeof STATIONERY !== 'undefined') extraItems = extraItems.concat(STATIONERY);
+    
+    if (extraItems.length > 0 && typeof init3DCarousel === 'function') {
+      init3DCarousel(extraItems);
+    }
+    
+    setTimeout(() => {
+      const upsell = document.getElementById('upsellOverlay');
+      if(upsell) upsell.classList.add('show');
+    }, 1000);
+  });
+</script>
+
+<!-- Mobile Nav JS -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const topBurger = document.getElementById("topBurger");
+  const glassMenu = document.getElementById("glassMenu");
+  const glassCloseBtn = document.getElementById("glassCloseBtn");
+  
+  if(topBurger && glassMenu) {
+    const burgerIcon = topBurger.querySelector("svg");
+    let menuOpen = false;
+
+    function closeMenu() {
+      menuOpen = false;
+      glassMenu.classList.remove("open");
+      burgerIcon.innerHTML = '<path d="M3 12h18M3 6h18M3 18h18"/>';
+    }
+
+    function openMenu() {
+      menuOpen = true;
+      glassMenu.classList.add("open");
+      burgerIcon.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
+    }
+
+    topBurger.addEventListener("click", function(e) {
+      createRipple(e, topBurger);
+      if(menuOpen) closeMenu();
+      else openMenu();
+    });
+
+    if(glassCloseBtn) {
+      glassCloseBtn.addEventListener("click", function(e) {
+        createRipple(e, glassCloseBtn);
+        closeMenu();
+      });
+    }
+  }
+
+  const gmLinks = document.querySelectorAll(".gm-link");
+  gmLinks.forEach(link => {
+    link.addEventListener("click", function(e) {
+      createRipple(e, link);
+    });
+  });
+
+  function createRipple(event, element) {
+    const circle = document.createElement("span");
+    const diameter = Math.max(element.clientWidth, element.clientHeight);
+    const radius = diameter / 2;
+    circle.style.width = circle.style.height = `${diameter}px`;
+    
+    const rect = element.getBoundingClientRect();
+    const x = event.clientX - rect.left - radius;
+    const y = event.clientY - rect.top - radius;
+    
+    circle.style.left = `${x}px`;
+    circle.style.top = `${y}px`;
+    circle.classList.add("ripple");
+    
+    const existing = element.querySelector(".ripple");
+    if(existing) existing.remove();
+    
+    element.appendChild(circle);
+  }
+});
+</script>
+<script src="assets/js/search_data.js"></script>\n<script src="assets/js/search_logic.js"></script>\n</body>
+
+</html>

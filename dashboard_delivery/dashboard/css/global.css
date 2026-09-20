@@ -1,0 +1,107 @@
+:root {
+    /* Luxury Dark SaaS Theme Colors */
+    --bg-main: #0B132B; /* Deep Dark Blue */
+    --bg-surface: #14213D; /* Lighter Dark Blue for cards */
+    --bg-glass: rgba(20, 33, 61, 0.85);
+    --border-color: rgba(255, 255, 255, 0.1);
+    
+    --text-main: #FFFFFF;
+    --text-secondary: #94A3B8;
+    
+    --primary: #FCA311; /* Vibrant Yellow */
+    --secondary: #E5E5E5; /* White/Gray */
+    --accent: #FCA311;
+    --primary-light: rgba(252, 163, 17, 0.15);
+    
+    --success: #22C55E;
+    --danger: #EF4444;
+    --warning: #F59E0B;
+    --info: #3B82F6;
+
+    --sidebar-width: 280px;
+    --header-height: 80px;
+    
+    /* Premium Shadows & Radii */
+    --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --shadow-hover: 0 10px 40px rgba(252, 163, 17, 0.2);
+    /* 3D Button shadow */
+    --shadow-3d: 0 6px 0px #C97E05, 0 10px 20px rgba(0,0,0,0.4);
+    --shadow-3d-active: 0 2px 0px #C97E05, 0 4px 10px rgba(0,0,0,0.4);
+    
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-xl: 24px;
+    
+    --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="light"] {
+    /* Optional light mode if they switch */
+    --bg-main: #F8FAFC;
+    --bg-surface: #FFFFFF;
+    --bg-glass: rgba(255, 255, 255, 0.85);
+    --border-color: #E5E7EB;
+    --text-main: #111827;
+    --text-secondary: #6B7280;
+    --primary: #2563EB;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    overflow-x: hidden;
+    transition: background-color 0.4s ease, color 0.4s ease;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* Glassmorphism utility */
+.glass {
+    background: var(--bg-glass);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+[data-theme="dark"] .glass {
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* Base animations */
+.fade-in {
+    animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
