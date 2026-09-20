@@ -71,7 +71,6 @@ window.smartMatchItem = function(item, rawQuery) {
 
   const fullStr = `${title} ${pub} ${cls} ${subj} ${school} ${author} ${itemId} ${cat}`;
 
-  // Every token must match either directly or via synonyms
   return tokens.every(token => {
     if (fullStr.includes(token)) return true;
 
@@ -98,11 +97,8 @@ window.smartItemScore = function(item, rawQuery) {
   const q = rawQuery.toLowerCase().trim();
   const title = String(item.title || item.name || '').toLowerCase();
 
-  // Exact title match
   if (title === q) return 1000;
-  // Title starts with query
   if (title.startsWith(q)) return 500;
-  // Title contains query
   if (title.includes(q)) return 300;
 
   const rawTokens = q.split(/\s+/).filter(Boolean);
@@ -114,6 +110,13 @@ window.smartItemScore = function(item, rawQuery) {
   });
   return score;
 };
+
+// Detect if current page is the main books catalog page
+function isBooksCatalogPage() {
+  const p = window.location.pathname.toLowerCase();
+  if (p === '/' || p.endsWith('/index.html') || p.endsWith('/index')) return false;
+  return p.endsWith('/books') || p.endsWith('/books.html') || p.includes('books');
+}
 
 // Initialize Search Bar & Live Dropdown
 document.addEventListener("DOMContentLoaded", function() {
@@ -149,15 +152,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const rawQuery = e.target.value.trim();
 
-    // If on a page with live dynamic filters (e.g. books.html, stationery.html, toys.html)
-    if (typeof window.applyFilters === 'function') {
+    // If on books catalog page: live update grid without reload
+    if (isBooksCatalogPage() && typeof window.applyFilters === 'function') {
       window.activeSearchQuery = rawQuery;
       
-      // Update URL silently without full reload
       try {
         if (rawQuery) {
-          const newUrl = `${window.location.pathname}?q=${encodeURIComponent(rawQuery)}`;
-          window.history.replaceState({ q: rawQuery }, '', newUrl);
+          window.history.replaceState({ q: rawQuery }, '', `${window.location.pathname}?q=${encodeURIComponent(rawQuery)}`);
         } else {
           window.history.replaceState({}, '', window.location.pathname);
         }
@@ -166,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function() {
       // Debounce catalog filter update
       liveFilterTimeout = setTimeout(() => {
         window.applyFilters();
-      }, 100);
+      }, 80);
     }
 
     // Handle Dropdown Suggestions
@@ -179,7 +180,6 @@ document.addEventListener("DOMContentLoaded", function() {
     searchForm.classList.add("expanded");
 
     searchTimeout = setTimeout(() => {
-      // Gather Full Catalog
       const rawCatalog = [];
       if (typeof SCRAPED_COURSES !== 'undefined' && Array.isArray(SCRAPED_COURSES)) rawCatalog.push(...SCRAPED_COURSES);
       if (typeof SCRAPED_BOOKS !== 'undefined' && Array.isArray(SCRAPED_BOOKS)) rawCatalog.push(...SCRAPED_BOOKS);
@@ -207,7 +207,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 120);
   });
 
-  // Handle Form Submission
+  // Handle Form Submission (Enter key or Search button clicked)
   searchForm.addEventListener("submit", function(e) {
     e.preventDefault();
     dropdown.classList.remove("show");
@@ -215,7 +215,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const query = searchInput.value.trim();
 
-    if (typeof window.applyFilters === 'function') {
+    if (isBooksCatalogPage() && typeof window.applyFilters === 'function') {
       window.activeSearchQuery = query;
       try {
         if (query) {
@@ -225,8 +225,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
       } catch(err) {}
       window.applyFilters();
+
+      // Smooth scroll to product grid
+      const grid = document.getElementById('productGrid') || document.querySelector('.shop-layout');
+      if (grid) {
+        grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
     } else {
-      window.location.href = `books.html${query ? ('?q=' + encodeURIComponent(query)) : ''}`;
+      // Redirect from any other page to /books
+      window.location.href = `/books${query ? ('?q=' + encodeURIComponent(query)) : ''}`;
     }
   });
 
@@ -271,7 +278,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     results.slice(0, 8).forEach(book => {
       const item = document.createElement("a");
-      item.href = `books.html?q=${encodeURIComponent(book.title || '')}`;
+      item.href = `/books?q=${encodeURIComponent(book.title || '')}`;
       item.className = "search-result-item";
       item.style.cssText = "display:flex; align-items:center; gap:12px; padding:10px 16px; border-bottom:1px solid #f1f5f9; text-decoration:none; transition:0.2s; background:#fff; cursor:pointer;";
 
@@ -302,14 +309,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
         searchInput.value = book.title;
 
-        if (typeof window.applyFilters === 'function') {
+        if (isBooksCatalogPage() && typeof window.applyFilters === 'function') {
           window.activeSearchQuery = book.title;
           try {
             window.history.replaceState({ q: book.title }, '', `${window.location.pathname}?q=${encodeURIComponent(book.title)}`);
           } catch(err) {}
           window.applyFilters();
+          const grid = document.getElementById('productGrid') || document.querySelector('.shop-layout');
+          if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
-          window.location.href = `books.html?q=${encodeURIComponent(book.title)}`;
+          window.location.href = `/books?q=${encodeURIComponent(book.title)}`;
         }
       });
 
@@ -327,14 +336,16 @@ document.addEventListener("DOMContentLoaded", function() {
         dropdown.classList.remove("show");
         searchForm.classList.remove("expanded");
 
-        if (typeof window.applyFilters === 'function') {
+        if (isBooksCatalogPage() && typeof window.applyFilters === 'function') {
           window.activeSearchQuery = query;
           try {
             window.history.replaceState({ q: query }, '', `${window.location.pathname}?q=${encodeURIComponent(query)}`);
           } catch(err) {}
           window.applyFilters();
+          const grid = document.getElementById('productGrid') || document.querySelector('.shop-layout');
+          if (grid) grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } else {
-          window.location.href = `books.html?q=${encodeURIComponent(query)}`;
+          window.location.href = `/books?q=${encodeURIComponent(query)}`;
         }
       });
       dropdown.appendChild(footer);

@@ -36,12 +36,135 @@ window.getAdjustedPrice = function(item) {
 };
 
 // ============================================================
-// STUDY PACK PREMIUM DYNAMIC FILTERS & PRODUCT CARDS
+// STUDY PACK SMART SEARCH MATCHING ENGINE
 // ============================================================
+const DF_TYPO_MAP = {
+  'englsih': 'english', 'engls': 'english', 'eng': 'english', 'englis': 'english',
+  'oxfrd': 'oxford', 'oxfrod': 'oxford', 'oxforde': 'oxford', 'oup': 'oxford',
+  'maths': 'math', 'mathes': 'math', 'mathmatics': 'mathematics', 'hisab': 'math',
+  'cntdown': 'countdown', 'countdon': 'countdown', 'count down': 'countdown',
+  'scince': 'science', 'scence': 'science', 'sience': 'science', 'sci': 'science',
+  'chem': 'chemistry', 'chemstry': 'chemistry',
+  'phy': 'physics', 'physic': 'physics',
+  'urduu': 'urdu', 'sindhy': 'sindhi', 'sndhi': 'sindhi',
+  'islamiat': 'islamic', 'islamyat': 'islamic', 'isl': 'islamic', 'deenyat': 'islamic',
+  'cambrige': 'cambridge', 'cambredge': 'cambridge', 'cie': 'cambridge', 'igcse': 'cambridge',
+  'paramont': 'paramount', 'spectrm': 'spectrum',
+  'kifayat': 'kifayat', 'kifyat': 'kifayat', 'kaifayat': 'kifayat',
+  'afaq': 'afaq', 'sun series': 'afaq', 'iqbal': 'afaq',
+  'stbb': 'sindh', 'ptbb': 'punjab'
+};
+
+const DF_SYNONYMS = {
+  'math': ['math', 'mathematics', 'countdown', 'hisab', 'maths'],
+  'mathematics': ['math', 'mathematics', 'countdown', 'hisab', 'maths'],
+  'countdown': ['countdown', 'count down', 'math', 'mathematics'],
+  'science': ['science', 'amazing science', 'primary science', 'sci'],
+  'english': ['english', 'oxford', 'broadway', 'grammar', 'english tree', 'eng'],
+  'urdu': ['urdu', 'guldasta', 'narde', 'gul-e-lala', 'likhai'],
+  'islamic': ['islamic', 'islamiat', 'islamyat', 'deenyat', 'islam'],
+  'social': ['social studies', 'social', 'dunya', 'geography', 'history'],
+  'computer': ['computer', 'whiz', 'it', 'keyboard', 'computing'],
+  'oxford': ['oxford', 'oup', 'countdown', 'broadway'],
+  'paramount': ['paramount'],
+  'kifayat': ['kifayat'],
+  'cambridge': ['cambridge', 'cie', 'igcse', 'o level', 'a level'],
+  'afaq': ['afaq', 'sun series', 'iqbal'],
+  'spectrum': ['spectrum'],
+  'sindh': ['sindh', 'stbb', 'jamshoro'],
+  'punjab': ['punjab', 'ptbb', 'lahore']
+};
+
+const DF_STOP_WORDS = new Set(['ka', 'ki', 'ke', 'ko', 'in', 'for', 'of', 'and', 'the', 'a', 'an', 'book', 'books', 'series', 'edition', 'by', 'vol', 'volume']);
+
+window.smartMatchItem = function(item, rawQuery) {
+  if (!rawQuery || !rawQuery.trim()) return true;
+  const q = rawQuery.toLowerCase().trim();
+  const rawTokens = q.split(/\s+/).filter(Boolean);
+  if (rawTokens.length === 0) return true;
+
+  let tokens = rawTokens.map(t => DF_TYPO_MAP[t] || t);
+  if (tokens.length > 1) {
+    const filtered = tokens.filter(t => !DF_STOP_WORDS.has(t));
+    if (filtered.length > 0) tokens = filtered;
+  }
+
+  const title = String(item.title || item.name || '').toLowerCase();
+  const pub = String(item.pub || item.publisher || '').toLowerCase();
+  const cls = Array.isArray(item.cls) ? item.cls.join(' ').toLowerCase() : String(item.cls || item.class_name || '').toLowerCase();
+  const subj = Array.isArray(item.subj) ? item.subj.join(' ').toLowerCase() : String(item.subj || item.subject || '').toLowerCase();
+  const school = String(item.school || '').toLowerCase();
+  const author = String(item.author || item.brand || '').toLowerCase();
+  const itemId = String(item.id || '').toLowerCase();
+  const cat = String(item.category || item.genre || '').toLowerCase();
+
+  const fullStr = `${title} ${pub} ${cls} ${subj} ${school} ${author} ${itemId} ${cat}`;
+
+  return tokens.every(token => {
+    if (fullStr.includes(token)) return true;
+
+    if (token === '1' && (fullStr.includes('book 1') || fullStr.includes('class 1') || fullStr.includes('nursery') || fullStr.includes('grade 1'))) return true;
+    if (token === '2' && (fullStr.includes('book 2') || fullStr.includes('class 2') || fullStr.includes('grade 2'))) return true;
+    if (token === '3' && (fullStr.includes('book 3') || fullStr.includes('class 3') || fullStr.includes('grade 3'))) return true;
+    if (token === '4' && (fullStr.includes('book 4') || fullStr.includes('class 4') || fullStr.includes('grade 4'))) return true;
+    if (token === '5' && (fullStr.includes('book 5') || fullStr.includes('class 5') || fullStr.includes('grade 5'))) return true;
+    if (token === '6' && (fullStr.includes('book 6') || fullStr.includes('class 6') || fullStr.includes('grade 6'))) return true;
+    if (token === '7' && (fullStr.includes('book 7') || fullStr.includes('class 7') || fullStr.includes('grade 7'))) return true;
+    if (token === '8' && (fullStr.includes('book 8') || fullStr.includes('class 8') || fullStr.includes('grade 8'))) return true;
+
+    const syns = DF_SYNONYMS[token];
+    if (syns && syns.some(s => fullStr.includes(s))) return true;
+
+    return false;
+  });
+};
+
+window.smartItemScore = function(item, rawQuery) {
+  if (!rawQuery || !rawQuery.trim()) return 0;
+  const q = rawQuery.toLowerCase().trim();
+  const title = String(item.title || item.name || '').toLowerCase();
+
+  if (title === q) return 1000;
+  if (title.startsWith(q)) return 500;
+  if (title.includes(q)) return 300;
+
+  const rawTokens = q.split(/\s+/).filter(Boolean);
+  let score = 0;
+  rawTokens.forEach(t => {
+    const norm = DF_TYPO_MAP[t] || t;
+    if (title.includes(norm)) score += 60;
+    else score += 15;
+  });
+  return score;
+};
+
+// Global helper to clear all filters & search query
+window.clearAllCatalogFilters = function() {
+  const sidebar = document.getElementById('filterCard');
+  if (sidebar) {
+    sidebar.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+    sidebar.querySelectorAll('.acc-badge').forEach(b => { b.textContent = '0'; b.classList.remove('show'); });
+  }
+  const priceRange = document.getElementById('priceRange');
+  const priceVal = document.getElementById('priceVal');
+  if (priceRange) {
+    priceRange.value = 10000;
+    if (priceVal) priceVal.innerText = 'Rs 10,000';
+  }
+  const searchInput = document.querySelector('.nav-search-bar input');
+  if (searchInput) searchInput.value = '';
+  window.activeSearchQuery = '';
+  try {
+    window.history.replaceState({}, '', window.location.pathname);
+  } catch(e){}
+  if (typeof window.applyFilters === 'function') window.applyFilters();
+};
 
 window.currentPage = 1;
 window.ITEMS_PER_PAGE = 9;
 window.currentBooks = [];
+const initUrlParams = new URLSearchParams(window.location.search);
+window.activeSearchQuery = (initUrlParams.get('q') || '').trim();
 
 function getCatalogData(type) {
     let items = [];

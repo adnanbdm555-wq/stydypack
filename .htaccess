@@ -15,16 +15,16 @@ RewriteRule ^index(\.html)?$ / [R=301,L]
 
 # 3. Clean Pages URL: Strip .html extension (e.g. /books.html -> /books)
 RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/+(.+)\.html[\s\?] [NC]
-RewriteRule ^(.+)\.html$ /$1 [R=301,L]
+RewriteRule ^(.+)\.html$ /$1 [R=301,L,QSA]
 
 # 4. Internal Rewrite: /dashboard -> /dashboard/index.html
-RewriteRule ^dashboard/?$ dashboard/index.html [L]
+RewriteRule ^dashboard/?$ dashboard/index.html [L,QSA]
 
 # 5. Internal Rewrite: /books -> books.html
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME}.html -f
-RewriteRule ^([^\.]+)$ $1.html [NC,L]
+RewriteRule ^([^\.]+)$ $1.html [NC,L,QSA]
 
 # Security, SEO & Caching HTTP Headers
 <IfModule mod_headers.c>
