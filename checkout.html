@@ -939,13 +939,36 @@ async function placeOrder(e){
       console.warn('WooCommerce sync warning:', wcErr);
     }
 
-    // 2. Direct Instant Email Notification to info@taleemihub.com and taleemihub2020@gmail.com
-    orderData.admin_emails = ['info@taleemihub.com', 'taleemihub2020@gmail.com'];
-    fetch('https://api.studypack.taleemihub.com/wp-json/studypack/v1/order-notify', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(orderData)
-    }).catch(e => console.warn('Email notify fetch error:', e));
+    // 2. Direct Instant Email Alert to info@taleemihub.com & taleemihub2020@gmail.com
+    try {
+      fetch('/api/send-order-alert.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData)
+      }).catch(e => console.warn('Hostinger email notify error:', e));
+    } catch(e) {}
+
+    // Redundant Backup Alert to info@taleemihub.com
+    try {
+      fetch('https://formsubmit.co/ajax/info@taleemihub.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          _subject: `📦 Naya Order: #${orderId} (Rs ${total}) - ${name}`,
+          _cc: 'taleemihub2020@gmail.com',
+          order_id: orderId,
+          customer_name: name,
+          phone: phone,
+          customer_email: email,
+          city: city,
+          address: address,
+          notes: notes,
+          payment_method: paymentMethodTitle,
+          bill_total: `Rs ${total}`,
+          items: orderItems.map(i => `${i.qty}x ${i.title} (Rs ${i.price})`).join(' | ')
+        })
+      }).catch(err => console.warn('Backup email notify error:', err));
+    } catch(e){}
 
     // 3. Write to Firestore Database for Live Admin Dashboard
     db.collection('orders').doc(orderId).set(orderData);
