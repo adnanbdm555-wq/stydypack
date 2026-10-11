@@ -67,6 +67,18 @@ try {
             if (typeof renderFeatured === 'function') renderFeatured();
             if (typeof renderAll === 'function') renderAll();
             if (typeof renderProductDetails === 'function') renderProductDetails();
+        }, err => {
+            console.warn("Firestore products note (using static catalog):", err.message);
+            const map = new Map();
+            BASE_SCRAPED_BOOKS.forEach(b => map.set(String(b.id), b));
+            if (typeof SCRAPED_TOYS !== 'undefined') SCRAPED_TOYS.forEach(b => map.set(String(b.id), b));
+            if (typeof SCRAPED_STATIONERY !== 'undefined') SCRAPED_STATIONERY.forEach(b => map.set(String(b.id), b));
+            if (typeof SCRAPED_COURSES !== 'undefined') SCRAPED_COURSES.forEach(b => map.set(String(b.id), b));
+            if (typeof SCRAPED_AFAQ !== 'undefined') SCRAPED_AFAQ.forEach(b => map.set(String(b.id), b));
+            BOOKS = Array.from(map.values());
+            window.BOOKS = BOOKS;
+            if (typeof initDynamicFilters === 'function') initDynamicFilters();
+            if (typeof applyFilters === 'function') applyFilters();
         });
     }
 } catch(e) {

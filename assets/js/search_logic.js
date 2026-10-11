@@ -186,6 +186,7 @@ document.addEventListener("DOMContentLoaded", function() {
       if (typeof BOOKS !== 'undefined' && Array.isArray(BOOKS)) rawCatalog.push(...BOOKS);
       if (typeof SCRAPED_STATIONERY !== 'undefined' && Array.isArray(SCRAPED_STATIONERY)) rawCatalog.push(...SCRAPED_STATIONERY);
       if (typeof SCRAPED_TOYS !== 'undefined' && Array.isArray(SCRAPED_TOYS)) rawCatalog.push(...SCRAPED_TOYS);
+      if (typeof SCRAPED_AFAQ !== 'undefined' && Array.isArray(SCRAPED_AFAQ)) rawCatalog.push(...SCRAPED_AFAQ);
 
       const catalog = [];
       const seenSearchIds = new Set();

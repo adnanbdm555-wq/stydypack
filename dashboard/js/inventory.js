@@ -48,6 +48,16 @@ function getAllInventoryProducts() {
         })));
     }
 
+    if (typeof SCRAPED_AFAQ !== 'undefined' && Array.isArray(SCRAPED_AFAQ)) {
+        all = all.concat(SCRAPED_AFAQ.map(a => ({
+            id: String(a.id),
+            title: a.title || 'AFAQ Book',
+            category: 'Academic Books',
+            price: Number(a.price) || 0,
+            type: 'book'
+        })));
+    }
+
     // Merge stock overrides
     const stockOverrides = JSON.parse(localStorage.getItem('sp_stock_overrides') || '{}');
     all.forEach(item => {

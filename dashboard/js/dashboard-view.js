@@ -17,7 +17,7 @@ function chartGridColor() {
 
 window.renderDashboard = function() {
     const orders = window.AppData.orders || [];
-    const products = window.AppData.products || [];
+    const products = (typeof getAllCombinedProducts === 'function' ? getAllCombinedProducts() : (window.AppData && window.AppData.products)) || [];
 
     let totalSales = 0, pending = 0, outOfStock = 0;
     orders.forEach(o => {

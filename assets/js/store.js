@@ -92,6 +92,11 @@ window.findItem = function(id) {
         const found = SCRAPED_STATIONERY.find(x => String(x.id) === sId);
         if (found) return found;
     }
+    // Check in SCRAPED_COURSES
+    if (typeof SCRAPED_COURSES !== 'undefined' && Array.isArray(SCRAPED_COURSES)) {
+        const found = SCRAPED_COURSES.find(x => String(x.id) === sId);
+        if (found) return found;
+    }
     // Check in SCRAPED_AFAQ
     if (typeof SCRAPED_AFAQ !== 'undefined' && Array.isArray(SCRAPED_AFAQ)) {
         const found = SCRAPED_AFAQ.find(x => String(x.id) === sId);
