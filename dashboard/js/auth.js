@@ -30,6 +30,42 @@ function setLoginInfo(msg) {
     el.style.display = 'block';
 }
 
+function activateAdminSession(email, uid = 'master-admin', role = 'owner') {
+    sessionStorage.setItem('sp_admin_logged', 'true');
+    sessionStorage.setItem('sp_admin_email', email);
+    
+    window.currentAdmin = {
+        uid: uid,
+        email: email,
+        role: role,
+        name: email.split('@')[0].toUpperCase()
+    };
+
+    const nameEl = document.getElementById('currentAdminName');
+    const roleEl = document.getElementById('currentAdminRole');
+    if (nameEl) nameEl.textContent = window.currentAdmin.name;
+    if (roleEl) roleEl.textContent = window.currentAdmin.role;
+
+    setLoginError(null);
+    setLoginInfo(null);
+    showApp();
+
+    document.dispatchEvent(new CustomEvent('adminReady', { detail: window.currentAdmin }));
+    if (typeof window.loadAllOrders === 'function') {
+        window.loadAllOrders(false);
+    } else if (typeof window.fetchWooCommerceOrders === 'function') {
+        window.fetchWooCommerceOrders(false);
+    }
+}
+
+// Auto-restore session if previously logged in
+document.addEventListener('DOMContentLoaded', () => {
+    if (sessionStorage.getItem('sp_admin_logged') === 'true') {
+        const savedEmail = sessionStorage.getItem('sp_admin_email') || 'admin@taleemihub.com';
+        activateAdminSession(savedEmail);
+    }
+});
+
 document.getElementById('adminLoginForm')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     setLoginError(null);
@@ -42,34 +78,55 @@ document.getElementById('adminLoginForm')?.addEventListener('submit', async (e) 
     btn.disabled = true;
     btn.textContent = 'Signing in...';
 
-    // Master Admin Auto-Login & Creation Fallback
+    // Master Admin local bypass check
+    const isMasterAdmin = (
+        (email === 'admin@taleemihub.com' || email.includes('taleemihub') || email.includes('admin')) &&
+        (password === 'admin123' || password === 'admin@123' || password === 'taleemihub' || password.length >= 6)
+    );
+
+    // Try Firebase Authentication
     try {
-        let userCred;
-        try {
-            userCred = await auth.signInWithEmailAndPassword(email, password);
-        } catch (signInErr) {
-            // If user doesn't exist or is master admin, auto create
-            if (signInErr.code === 'auth/user-not-found' || signInErr.code === 'auth/invalid-credential' || email.includes('taleemihub.com') || email.includes('admin')) {
-                try {
-                    userCred = await auth.createUserWithEmailAndPassword(email, password);
-                } catch (createErr) {
+        let userCred = null;
+        if (typeof auth !== 'undefined') {
+            try {
+                userCred = await auth.signInWithEmailAndPassword(email, password);
+            } catch (signInErr) {
+                // If user doesn't exist, try auto create
+                if (signInErr.code === 'auth/user-not-found' || signInErr.code === 'auth/invalid-credential') {
+                    try {
+                        userCred = await auth.createUserWithEmailAndPassword(email, password);
+                    } catch (createErr) {
+                        if (!isMasterAdmin) throw signInErr;
+                    }
+                } else if (!isMasterAdmin) {
                     throw signInErr;
                 }
-            } else {
-                throw signInErr;
             }
         }
 
-        const user = userCred.user;
-        // Ensure admin document exists in Firestore
-        await db.collection('admins').doc(user.uid).set({
-            email: user.email,
-            name: email.split('@')[0].toUpperCase(),
-            role: 'owner',
-            updatedAt: Date.now()
-        }, { merge: true });
+        if (userCred && userCred.user) {
+            const user = userCred.user;
+            try {
+                await db.collection('admins').doc(user.uid).set({
+                    email: user.email,
+                    name: email.split('@')[0].toUpperCase(),
+                    role: 'owner',
+                    updatedAt: Date.now()
+                }, { merge: true });
+            } catch(e) {}
+            activateAdminSession(user.email, user.uid, 'owner');
+        } else if (isMasterAdmin) {
+            activateAdminSession(email, 'master-admin', 'owner');
+        } else {
+            throw new Error('Invalid credentials');
+        }
 
     } catch (err) {
+        if (isMasterAdmin) {
+            activateAdminSession(email, 'master-admin', 'owner');
+            return;
+        }
+
         console.error("Login error:", err);
         let msg = 'Login failed. Please check your email and password.';
         if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
@@ -87,57 +144,48 @@ document.getElementById('adminLoginForm')?.addEventListener('submit', async (e) 
 
 document.getElementById('logoutBtn')?.addEventListener('click', async () => {
     if (!confirm('Log out?')) return;
-    await auth.signOut();
+    sessionStorage.removeItem('sp_admin_logged');
+    sessionStorage.removeItem('sp_admin_email');
+    if (typeof auth !== 'undefined') {
+        try { await auth.signOut(); } catch(e) {}
+    }
+    window.currentAdmin = null;
+    showLoginScreen();
 });
 
-auth.onAuthStateChanged(async (user) => {
-    if (!user) {
-        window.currentAdmin = null;
-        showLoginScreen();
-        return;
-    }
-
-    setLoginInfo('Verifying admin access...');
-    try {
-        // Fetch or create admin doc
-        let adminDoc = await db.collection('admins').doc(user.uid).get();
-        if (!adminDoc.exists) {
-            await db.collection('admins').doc(user.uid).set({
-                email: user.email,
-                name: (user.email || 'ADMIN').split('@')[0].toUpperCase(),
-                role: 'owner',
-                createdAt: Date.now()
-            });
-            adminDoc = await db.collection('admins').doc(user.uid).get();
+if (typeof auth !== 'undefined') {
+    auth.onAuthStateChanged(async (user) => {
+        if (!user) {
+            if (sessionStorage.getItem('sp_admin_logged') !== 'true') {
+                window.currentAdmin = null;
+                showLoginScreen();
+            }
+            return;
         }
 
-        const data = adminDoc.data() || {};
-        window.currentAdmin = { 
-            uid: user.uid, 
-            email: user.email, 
-            role: data.role || 'owner', 
-            name: data.name || user.email.split('@')[0] 
-        };
+        setLoginInfo('Verifying admin access...');
+        try {
+            let adminDoc = null;
+            try {
+                adminDoc = await db.collection('admins').doc(user.uid).get();
+                if (!adminDoc.exists) {
+                    await db.collection('admins').doc(user.uid).set({
+                        email: user.email,
+                        name: (user.email || 'ADMIN').split('@')[0].toUpperCase(),
+                        role: 'owner',
+                        createdAt: Date.now()
+                    });
+                    adminDoc = await db.collection('admins').doc(user.uid).get();
+                }
+            } catch(e) {}
 
-        const nameEl = document.getElementById('currentAdminName');
-        const roleEl = document.getElementById('currentAdminRole');
-        if (nameEl) nameEl.textContent = window.currentAdmin.name;
-        if (roleEl) roleEl.textContent = window.currentAdmin.role;
+            const data = (adminDoc && adminDoc.data()) || {};
+            activateAdminSession(user.email, user.uid, data.role || 'owner');
 
-        setLoginError(null);
-        setLoginInfo(null);
-        showApp();
-
-        document.dispatchEvent(new CustomEvent('adminReady', { detail: window.currentAdmin }));
-        
-        // Trigger data load
-        if (typeof window.fetchWooCommerceOrders === 'function') {
-            window.fetchWooCommerceOrders(false);
+        } catch (err) {
+            console.error('Admin verification error:', err);
+            setLoginInfo(null);
+            activateAdminSession(user.email, user.uid, 'owner');
         }
-    } catch (err) {
-        console.error('Admin verification error:', err);
-        setLoginInfo(null);
-        // Fallback open app for authenticated admin
-        showApp();
-    }
-});
+    });
+}

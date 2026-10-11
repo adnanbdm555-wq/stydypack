@@ -25,6 +25,29 @@ if (!$data || empty($data['id'])) {
     exit;
 }
 
+// 1. Permanently Save Order to Server Database File
+try {
+    $ordersFile = __DIR__ . '/orders_data.json';
+    $existingOrders = [];
+    if (file_exists($ordersFile)) {
+        $existingOrders = json_decode(file_get_contents($ordersFile), true) ?: [];
+    }
+    $found = false;
+    foreach ($existingOrders as &$ex) {
+        if (strval($ex['id']) === strval($data['id'])) {
+            $ex = array_merge($ex, $data);
+            $found = true;
+            break;
+        }
+    }
+    if (!$found) {
+        array_unshift($existingOrders, $data);
+    }
+    file_put_contents($ordersFile, json_encode($existingOrders, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+} catch (Exception $e) {
+    error_log("Order file save error: " . $e->getMessage());
+}
+
 $orderId     = htmlspecialchars($data['id'] ?? 'N/A');
 $customer    = htmlspecialchars($data['customer'] ?? 'Customer');
 $phone       = htmlspecialchars($data['phone'] ?? 'N/A');

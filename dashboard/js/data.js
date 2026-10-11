@@ -15,6 +15,15 @@ window.AppData = {
     loaded: { products: false, orders: false, coupons: false, categories: false, admins: false }
 };
 
+// Pre-populate orders from cache if available
+try {
+    const cachedOrders = JSON.parse(localStorage.getItem('sp_cached_orders') || '[]');
+    if (cachedOrders && cachedOrders.length > 0) {
+        window.AppData.orders = cachedOrders;
+        window.AppData.loaded.orders = true;
+    }
+} catch(e) {}
+
 let __unsubscribers = [];
 
 function startDataListeners() {
@@ -29,11 +38,16 @@ function startDataListeners() {
     __unsubscribers.push(
         db.collection('orders').onSnapshot(snapshot => {
             const orders = snapshot.docs.map(d => d.data());
-            orders.sort((a, b) => (b.date || 0) - (a.date || 0));
+            orders.sort((a, b) => (Number(b.date) || 0) - (Number(a.date) || 0));
             window.AppData.orders = orders;
             window.AppData.loaded.orders = true;
             document.dispatchEvent(new CustomEvent('appDataLoaded', { detail: 'orders' }));
-        }, err => console.error('orders listener error:', err))
+        }, err => {
+            console.warn('orders firestore listener note (using server API/backup):', err.message);
+            if (typeof window.loadAllOrders === 'function') {
+                window.loadAllOrders(false);
+            }
+        })
     );
 
     __unsubscribers.push(

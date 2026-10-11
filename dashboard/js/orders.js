@@ -5,129 +5,188 @@ const WC_DASHBOARD_CONFIG = {
     consumerSecret: 'cs_75d5b1183e7985468ab5e374fc9be4ed0a5e2b3f'
 };
 
-window.fetchWooCommerceOrders = async function(showFeedback = true) {
-    try {
-        if (showFeedback && typeof showToast === 'function') showToast("WooCommerce se orders sync ho rahe hain...");
-        const authHeader = 'Basic ' + btoa(WC_DASHBOARD_CONFIG.consumerKey + ':' + WC_DASHBOARD_CONFIG.consumerSecret);
-        
-        const res = await fetch(`${WC_DASHBOARD_CONFIG.storeUrl}/wp-json/wc/v3/orders?per_page=50`, {
-            headers: {
-                'Authorization': authHeader
-            }
-        });
-        
-        if (!res.ok) {
-            console.warn("WC orders fetch failed:", res.status);
-            return;
-        }
-        
-        const wcOrders = await res.json();
-        const formattedWcOrders = wcOrders.map(o => {
-            const billing = o.billing || {};
-            const shipping = o.shipping || {};
-            const cust_name = `${billing.first_name || ''} ${billing.last_name || ''}`.trim() || 'Customer';
-            const phone = billing.phone || shipping.phone || 'N/A';
-            const email = billing.email || 'customer@taleemihub.com';
-            const address = [billing.address_1 || shipping.address_1, billing.address_2 || shipping.address_2].filter(Boolean).join(', ') || 'Karachi';
-            const city = billing.city || shipping.city || 'Karachi';
-            const province = billing.state || shipping.state || 'Sindh';
-            const notes = o.customer_note || '';
-            const paymentDetails = (o.meta_data || []).find(m => m.key === '_payment_account_number' || m.key === 'payment_account' || m.key === '_transaction_id' || m.key === 'account_number')?.value || '';
-            let rawPay = (o.payment_method || o.payment_method_title || '').toLowerCase();
-            let payMethod = 'cod';
-            if (rawPay.includes('easy') || rawPay.includes('paisa')) payMethod = 'easypaisa';
-            else if (rawPay.includes('jazz') || rawPay.includes('cash') && !rawPay.includes('delivery')) payMethod = 'jazzcash';
-            else if (rawPay.includes('card') || rawPay.includes('visa') || rawPay.includes('master')) payMethod = 'card';
-            else if (rawPay.includes('delivery') || rawPay.includes('cod')) payMethod = 'cod';
-            else payMethod = o.payment_method_title || o.payment_method || 'cod';
-            
-            const items = (o.line_items || []).map(line => ({
-                id: String(line.product_id || ''),
-                title: line.name || 'Product',
-                price: Number(line.price || 0),
-                qty: Number(line.quantity || 1),
-                total: Number(line.total || 0)
-            }));
-            
-            const total = Number(o.total || 0);
-            const shippingAmt = Number(o.shipping_total || 0);
-            
-            let status = (o.status || 'Pending').toLowerCase();
-            if (status === 'on-hold' || status === 'pending') status = 'Pending';
-            else if (status === 'processing') status = 'Processing';
-            else if (status === 'completed') status = 'Completed';
-            else if (status === 'cancelled') status = 'Cancelled';
-            else status = status.charAt(0).toUpperCase() + status.slice(1);
-            
-            return {
-                id: String(o.id),
-                customer: cust_name,
-                phone: phone,
-                email: email,
-                address: address,
-                city: city,
-                province: province,
-                notes: notes,
-                paymentDetails: paymentDetails,
-                items: items,
-                subtotal: total - shippingAmt,
-                shipping: shippingAmt,
-                shippingNote: shippingAmt > 0 ? `Rs ${shippingAmt}` : 'Weight ke mutabiq',
-                codFee: 0,
-                total: total,
-                status: status,
-                date: new Date(o.date_created).getTime() || Date.now(),
-                paymentMethod: payMethod,
-                source: 'woocommerce'
-            };
-        });
-        
-        // Merge with existing AppData.orders, deduplicating by ID
-        const existing = window.AppData.orders || [];
-        const map = new Map();
-        
-        // Add WooCommerce orders
-        formattedWcOrders.forEach(o => map.set(String(o.id), o));
-        // Add Firestore orders (merge so edited data or new firestore orders take precedence)
-        existing.forEach(o => {
-            const wc = map.get(String(o.id));
-            if (wc) {
-                map.set(String(o.id), { ...wc, ...o });
-            } else {
-                map.set(String(o.id), o);
-            }
-        });
+function formatSingleOrder(o) {
+    if (!o) return null;
+    const id = String(o.id || '');
+    if (!id) return null;
 
-        // Apply LocalStorage Overrides
-        const overrides = JSON.parse(localStorage.getItem('sp_order_overrides') || '{}');
-        map.forEach((val, key) => {
-            if (overrides[key]) {
-                map.set(key, { ...val, ...overrides[key] });
+    let dateNum = Date.now();
+    if (typeof o.date === 'number') {
+        dateNum = o.date;
+    } else if (o.date) {
+        dateNum = new Date(o.date).getTime() || Date.now();
+    } else if (o.date_created) {
+        dateNum = new Date(o.date_created).getTime() || Date.now();
+    }
+
+    const billing = o.billing || {};
+    const shipping = o.shipping || {};
+    const customer = o.customer || `${billing.first_name || ''} ${billing.last_name || ''}`.trim() || 'Customer';
+    const phone = o.phone || billing.phone || shipping.phone || 'N/A';
+    const email = o.email || billing.email || 'customer@taleemihub.com';
+    const address = o.address || [billing.address_1 || shipping.address_1, billing.address_2 || shipping.address_2].filter(Boolean).join(', ') || 'Karachi';
+    const city = o.city || billing.city || shipping.city || 'Karachi';
+    const province = o.province || billing.state || shipping.state || 'Sindh';
+
+    let items = [];
+    if (Array.isArray(o.items)) {
+        items = o.items;
+    } else if (Array.isArray(o.line_items)) {
+        items = o.line_items.map(line => ({
+            id: String(line.product_id || ''),
+            title: line.name || 'Product',
+            price: Number(line.price || 0),
+            qty: Number(line.quantity || 1),
+            total: Number(line.total || 0)
+        }));
+    }
+
+    const total = Number(o.total || 0);
+    const shippingAmt = Number(o.shipping || o.shipping_total || 0);
+    let status = o.status || 'Pending';
+    if (status.toLowerCase() === 'on-hold') status = 'Pending';
+    else status = status.charAt(0).toUpperCase() + status.slice(1);
+
+    return {
+        id: id,
+        customer: customer,
+        phone: phone,
+        email: email,
+        address: address,
+        city: city,
+        province: province,
+        notes: o.notes || o.customer_note || '',
+        paymentMethod: o.paymentMethod || o.payment_method || 'cod',
+        paymentMethodTitle: o.paymentMethodTitle || o.payment_method_title || 'Cash on Delivery',
+        paymentDetails: o.paymentDetails || '',
+        items: items,
+        subtotal: Number(o.subtotal || total - shippingAmt),
+        shipping: shippingAmt,
+        shippingNote: o.shippingNote || 'Weight ke mutabiq',
+        codFee: Number(o.codFee || 0),
+        total: total,
+        status: status,
+        date: dateNum,
+        source: o.source || 'website'
+    };
+}
+
+window.loadAllOrders = async function(showFeedback = false) {
+    try {
+        if (showFeedback && typeof showToast === 'function') {
+            showToast("Orders sync ho rahe hain...");
+        }
+
+        const map = new Map();
+
+        const addList = (list) => {
+            if (!Array.isArray(list)) return;
+            list.forEach(item => {
+                const formatted = formatSingleOrder(item);
+                if (formatted) {
+                    const existing = map.get(formatted.id);
+                    if (!existing) {
+                        map.set(formatted.id, formatted);
+                    } else {
+                        map.set(formatted.id, { ...existing, ...formatted });
+                    }
+                }
+            });
+        };
+
+        // 1. Load from LocalStorage Cache first (instant)
+        try {
+            const cached = JSON.parse(localStorage.getItem('sp_cached_orders') || '[]');
+            addList(cached);
+        } catch(e) {}
+
+        // 2. Load from Hostinger Server API (/api/get-orders.php)
+        try {
+            const res = await fetch('/api/get-orders.php?t=' + Date.now());
+            if (res.ok) {
+                const apiOrders = await res.json();
+                if (Array.isArray(apiOrders) && apiOrders.length > 0) {
+                    addList(apiOrders);
+                }
             }
-        });
-        
+        } catch(e) {}
+
+        // 3. Fallback: Load from /api/orders_data.json
+        try {
+            const res = await fetch('/api/orders_data.json?t=' + Date.now());
+            if (res.ok) {
+                const staticOrders = await res.json();
+                if (Array.isArray(staticOrders) && staticOrders.length > 0) {
+                    addList(staticOrders);
+                }
+            }
+        } catch(e) {}
+
+        // 4. Fallback: Load from /dashboard/js/wc_orders_backup.json
+        try {
+            const res = await fetch('/dashboard/js/wc_orders_backup.json?t=' + Date.now());
+            if (res.ok) {
+                const backupOrders = await res.json();
+                if (Array.isArray(backupOrders) && backupOrders.length > 0) {
+                    addList(backupOrders);
+                }
+            }
+        } catch(e) {}
+
+        // 5. Load from Firestore if online and permitted
+        if (typeof db !== 'undefined') {
+            try {
+                const snap = await db.collection('orders').limit(100).get();
+                const firestoreOrders = snap.docs.map(d => d.data());
+                addList(firestoreOrders);
+            } catch(e) {
+                // cloud permission note
+            }
+        }
+
+        // 6. Apply LocalStorage Overrides
+        try {
+            const overrides = JSON.parse(localStorage.getItem('sp_order_overrides') || '{}');
+            map.forEach((val, key) => {
+                if (overrides[key]) {
+                    map.set(key, { ...val, ...overrides[key] });
+                }
+            });
+        } catch(e) {}
+
         const merged = Array.from(map.values());
-        merged.sort((a,b) => (b.date || 0) - (a.date || 0));
-        
+        merged.sort((a, b) => (Number(b.date) || 0) - (Number(a.date) || 0));
+
         window.AppData.orders = merged;
         window.AppData.loaded.orders = true;
-        
+
+        try {
+            localStorage.setItem('sp_cached_orders', JSON.stringify(merged));
+        } catch(e) {}
+
         if (typeof renderOrders === 'function') renderOrders();
-        if (typeof renderDashboardView === 'function') renderDashboardView();
+        if (typeof renderDashboard === 'function') renderDashboard();
         if (typeof renderCustomers === 'function') renderCustomers();
-        
-        if (showFeedback && typeof showToast === 'function') showToast(`✅ ${formattedWcOrders.length} WooCommerce orders synced!`);
-        
+        if (typeof renderReports === 'function') renderReports();
+
+        if (showFeedback && typeof showToast === 'function') {
+            showToast(`✅ ${merged.length} orders updated!`);
+        }
+
+        return merged;
     } catch(err) {
-        console.warn("Could not fetch WooCommerce orders:", err);
+        console.warn("Could not sync orders:", err);
     }
 };
 
+window.fetchWooCommerceOrders = window.loadAllOrders;
+
 // Auto fetch when script loads
 document.addEventListener('DOMContentLoaded', function() {
+    window.loadAllOrders(false);
     setTimeout(() => {
-        window.fetchWooCommerceOrders(false);
-    }, 1200);
+        window.loadAllOrders(false);
+    }, 1000);
 });
 
 
@@ -330,6 +389,19 @@ window.updateOrderStatus = async function(id, newStatus) {
     orderOverrides[id] = { ...(orderOverrides[id] || {}), status: newStatus };
     localStorage.setItem('sp_order_overrides', JSON.stringify(orderOverrides));
 
+    try {
+        localStorage.setItem('sp_cached_orders', JSON.stringify(window.AppData.orders));
+    } catch(e) {}
+
+    // Sync to Hostinger API
+    try {
+        fetch('/api/update-order-status.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id, status: newStatus })
+        }).catch(() => {});
+    } catch(e) {}
+
     if (typeof db !== 'undefined') {
         try {
             await db.collection('orders').doc(id).set({ status: newStatus }, { merge: true });
@@ -340,7 +412,7 @@ window.updateOrderStatus = async function(id, newStatus) {
 
     showToast('Order status updated to ' + newStatus);
     if (typeof renderOrders === 'function') renderOrders();
-    if (typeof renderDashboardView === 'function') renderDashboardView();
+    if (typeof renderDashboard === 'function') renderDashboard();
     if (typeof renderReports === 'function') renderReports();
 };
 
@@ -690,7 +762,16 @@ window.saveOrderEdits = async function() {
         Object.assign(o, updatedData);
     }
 
-    // 3. Sync to Firestore in background
+    // 3. Sync to Hostinger API
+    try {
+        fetch('/api/update-order-status.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: id, ...updatedData })
+        }).catch(() => {});
+    } catch(e) {}
+
+    // 4. Sync to Firestore in background
     if (typeof db !== 'undefined') {
         try {
             await db.collection('orders').doc(id).set(updatedData, { merge: true });
@@ -703,7 +784,7 @@ window.saveOrderEdits = async function() {
     toggleOrderEdit();
     if (typeof renderOrders === 'function') renderOrders();
     if (typeof renderReports === 'function') renderReports();
-    if (typeof renderDashboardView === 'function') renderDashboardView();
+    if (typeof renderDashboard === 'function') renderDashboard();
 };
 
 

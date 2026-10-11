@@ -970,12 +970,23 @@ async function placeOrder(e){
       }).catch(err => console.warn('Backup email notify error:', err));
     } catch(e){}
 
-    // 3. Write to Firestore Database for Live Admin Dashboard
-    db.collection('orders').doc(orderId).set(orderData);
+    // 3. Write to Firestore Database for Live Admin Dashboard (with safe fallback)
+    try {
+      if (typeof db !== 'undefined') {
+        db.collection('orders').doc(orderId).set(orderData).catch(e => console.warn('Firestore cloud sync note:', e));
+      }
+    } catch(e) {}
+
+    // 4. Save to Local Cache
+    try {
+      const cached = JSON.parse(localStorage.getItem('sp_cached_orders') || '[]');
+      cached.unshift(orderData);
+      localStorage.setItem('sp_cached_orders', JSON.stringify(cached));
+    } catch(e) {}
 
     document.getElementById('orderIdDisplay').textContent = 'Order #' + orderId;
     
-    // 4. Generate WhatsApp confirmation link
+    // 5. Generate WhatsApp confirmation link
     const waPhone = '923331310234';
     const itemsList = cart.map(c => `• ${c.qty}x ${c.title} (Rs ${c.price})`).join('\n');
     const waMessage = `*Assalam-o-Alaikum Study Pack!*\nMaine website par naya order place kiya hai:\n\n📦 *Order ID:* #${orderId}\n👤 *Name:* ${name}\n📱 *Phone:* ${phone}\n📍 *City:* ${city}\n🏠 *Address:* ${address}\n\n📚 *Ordered Books:*\n${itemsList}\n\n💰 *Subtotal (Books):* Rs ${sub.toLocaleString()}\n🚚 *Delivery Charges:* Weight ke mutabiq\n\nBaraye meharbani actual parcel weight aur final bill confirm kar dein.`;
