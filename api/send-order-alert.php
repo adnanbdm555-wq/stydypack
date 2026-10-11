@@ -25,9 +25,23 @@ if (!$data || empty($data['id'])) {
     exit;
 }
 
-// 1. Permanently Save Order to Server Database File
+// Helper to convert any image path to a full public URL for emails
+function resolveAbsoluteImageUrl($img) {
+    if (empty($img)) {
+        return 'https://studypack.taleemihub.com/assets/images/studypack_logo.png';
+    }
+    $img = trim($img);
+    if (preg_match('/^https?:\/\//i', $img)) {
+        return $img;
+    }
+    $img = ltrim($img, '/');
+    return 'https://studypack.taleemihub.com/' . $img;
+}
+
+// 1. Permanently Save Order to Server Database File (with file locking & backup)
 try {
     $ordersFile = __DIR__ . '/orders_data.json';
+    $backupFile = __DIR__ . '/orders_backup.json';
     $existingOrders = [];
     if (file_exists($ordersFile)) {
         $existingOrders = json_decode(file_get_contents($ordersFile), true) ?: [];
@@ -43,7 +57,9 @@ try {
     if (!$found) {
         array_unshift($existingOrders, $data);
     }
-    file_put_contents($ordersFile, json_encode($existingOrders, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    $jsonData = json_encode($existingOrders, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    @file_put_contents($ordersFile, $jsonData, LOCK_EX);
+    @file_put_contents($backupFile, $jsonData, LOCK_EX);
 } catch (Exception $e) {
     error_log("Order file save error: " . $e->getMessage());
 }
@@ -61,20 +77,34 @@ $subtotal    = number_format(floatval($data['subtotal'] ?? 0));
 $total       = number_format(floatval($data['total'] ?? 0));
 $dateStr     = date('d M Y, h:i A');
 
-// Build Items Table
+// Build Items Table with Book Images
 $itemsHtml = '';
 if (!empty($data['items']) && is_array($data['items'])) {
     foreach ($data['items'] as $item) {
-        $title = htmlspecialchars($item['title'] ?? 'Item');
-        $qty   = intval($item['qty'] ?? 1);
-        $price = number_format(floatval($item['price'] ?? 0));
+        $title     = htmlspecialchars($item['title'] ?? 'Item');
+        $qty       = intval($item['qty'] ?? 1);
+        $price     = number_format(floatval($item['price'] ?? 0));
         $itemTotal = number_format(floatval(($item['price'] ?? 0) * $qty));
+        $rawImg    = $item['img'] ?? $item['image'] ?? '';
+        $imgUrl    = htmlspecialchars(resolveAbsoluteImageUrl($rawImg));
+
         $itemsHtml .= "
         <tr>
-            <td style='padding: 10px; border-bottom: 1px solid #E2E8F0; color: #1E293B; font-size: 14px;'><strong>{$title}</strong></td>
-            <td style='padding: 10px; border-bottom: 1px solid #E2E8F0; text-align: center; color: #64748B; font-size: 14px;'>{$qty}</td>
-            <td style='padding: 10px; border-bottom: 1px solid #E2E8F0; text-align: right; color: #1E293B; font-size: 14px;'>Rs {$price}</td>
-            <td style='padding: 10px; border-bottom: 1px solid #E2E8F0; text-align: right; color: #1565C0; font-weight: bold; font-size: 14px;'>Rs {$itemTotal}</td>
+            <td style='padding: 10px 8px; border-bottom: 1px solid #E2E8F0; width: 55px; vertical-align: middle; text-align: center;'>
+                <img src='{$imgUrl}' alt='{$title}' width='50' height='50' style='width: 50px; height: 50px; object-fit: contain; border-radius: 6px; border: 1px solid #CBD5E1; background: #ffffff; display: block; margin: 0 auto;'>
+            </td>
+            <td style='padding: 10px 8px; border-bottom: 1px solid #E2E8F0; color: #1E293B; font-size: 14px; vertical-align: middle;'>
+                <strong style='color: #0F172A; display: block; font-size: 13.5px; line-height: 1.4;'>{$title}</strong>
+            </td>
+            <td style='padding: 10px 8px; border-bottom: 1px solid #E2E8F0; text-align: center; color: #475569; font-size: 14px; vertical-align: middle;'>
+                <span style='background: #F1F5F9; padding: 3px 8px; border-radius: 4px; font-weight: 600;'>{$qty}</span>
+            </td>
+            <td style='padding: 10px 8px; border-bottom: 1px solid #E2E8F0; text-align: right; color: #475569; font-size: 13px; vertical-align: middle; white-space: nowrap;'>
+                Rs {$price}
+            </td>
+            <td style='padding: 10px 8px; border-bottom: 1px solid #E2E8F0; text-align: right; color: #1E3A8A; font-weight: bold; font-size: 14px; vertical-align: middle; white-space: nowrap;'>
+                Rs {$itemTotal}
+            </td>
         </tr>";
     }
 }
@@ -117,11 +147,12 @@ $emailBody = "
             <h3 style='margin: 0 0 10px 0; font-size: 16px; color: #0F172A; border-bottom: 2px solid #F1F5F9; padding-bottom: 6px;'>Ordered Items</h3>
             <table style='width: 100%; border-collapse: collapse; margin-bottom: 20px;'>
                 <thead>
-                    <tr style='background: #F8FAFC;'>
-                        <th style='padding: 8px 10px; text-align: left; color: #475569; font-size: 12px;'>Product</th>
-                        <th style='padding: 8px 10px; text-align: center; color: #475569; font-size: 12px;'>Qty</th>
-                        <th style='padding: 8px 10px; text-align: right; color: #475569; font-size: 12px;'>Price</th>
-                        <th style='padding: 8px 10px; text-align: right; color: #475569; font-size: 12px;'>Total</th>
+                    <tr style='background: #F8FAFC; border-bottom: 2px solid #E2E8F0;'>
+                        <th style='padding: 8px; text-align: center; color: #475569; font-size: 12px; width: 55px;'>Photo</th>
+                        <th style='padding: 8px; text-align: left; color: #475569; font-size: 12px;'>Product</th>
+                        <th style='padding: 8px; text-align: center; color: #475569; font-size: 12px; width: 45px;'>Qty</th>
+                        <th style='padding: 8px; text-align: right; color: #475569; font-size: 12px; width: 75px;'>Price</th>
+                        <th style='padding: 8px; text-align: right; color: #475569; font-size: 12px; width: 85px;'>Total</th>
                     </tr>
                 </thead>
                 <tbody>

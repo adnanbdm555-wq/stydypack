@@ -498,14 +498,20 @@ window.viewOrder = function(id) {
             subtotal += price * qty;
 
             const prod = prodMap.get(String(pId));
+            const itemImg = item.img || item.image || (prod ? (prod.img || prod.image) : '') || 'assets/images/studypack_logo.png';
             const itemCost = Number(item.purchase_price || (prod ? prod.purchase_price : 0)) || Math.round(price * 0.75);
             autoPurchaseCost += itemCost * qty;
 
             return `
             <tr>
                 <td>
-                    <div style="font-weight:600; color:var(--text-main);">${escapeHtml(item.title || 'Product')}</div>
-                    <div class="text-muted mono" style="font-size:0.75rem;">SKU: ${escapeHtml(pId || '')}</div>
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img src="${itemImg}" alt="${escapeHtml(item.title || 'Product')}" style="width:38px; height:38px; object-fit:contain; border-radius:6px; border:1px solid var(--border-color); background:var(--bg-card, #fff); flex-shrink:0;">
+                        <div>
+                            <div style="font-weight:600; color:var(--text-main); font-size:0.9rem; line-height:1.3;">${escapeHtml(item.title || 'Product')}</div>
+                            <div class="text-muted mono" style="font-size:0.75rem; margin-top:2px;">SKU: ${escapeHtml(pId || '')}</div>
+                        </div>
+                    </div>
                 </td>
                 <td>${money(price)}</td>
                 <td style="font-weight:600;">x${qty}</td>

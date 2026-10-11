@@ -40,12 +40,17 @@ foreach ($existingOrders as &$ex) {
     }
 }
 
+$backupFile = __DIR__ . '/orders_backup.json';
 if ($updated) {
-    file_put_contents($ordersFile, json_encode($existingOrders, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    $jsonData = json_encode($existingOrders, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    @file_put_contents($ordersFile, $jsonData, LOCK_EX);
+    @file_put_contents($backupFile, $jsonData, LOCK_EX);
     echo json_encode(["success" => true, "message" => "Order updated successfully"]);
 } else {
     // If not found, add it
     array_unshift($existingOrders, $data);
-    file_put_contents($ordersFile, json_encode($existingOrders, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+    $jsonData = json_encode($existingOrders, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+    @file_put_contents($ordersFile, $jsonData, LOCK_EX);
+    @file_put_contents($backupFile, $jsonData, LOCK_EX);
     echo json_encode(["success" => true, "message" => "Order created successfully"]);
 }

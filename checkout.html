@@ -899,13 +899,23 @@ async function placeOrder(e){
 
     const orderId = 'EB-' + Math.floor(100000 + Math.random()*899999);
 
-    const orderItems = cart.map(c => ({
-      id: String(c.id),
-      title: c.title || 'Product',
-      price: Number(c.price) || 0,
-      qty: Number(c.qty) || 1,
-      img: c.img || ''
-    }));
+    const orderItems = cart.map(c => {
+      let img = c.img || c.image || '';
+      if (!img && typeof window.findItem === 'function') {
+        const found = window.findItem(c.id);
+        if (found) img = found.img || found.image || '';
+      }
+      if (img && !img.startsWith('http://') && !img.startsWith('https://')) {
+        img = 'https://studypack.taleemihub.com/' + img.replace(/^\/+/, '');
+      }
+      return {
+        id: String(c.id),
+        title: c.title || 'Product',
+        price: Number(c.price) || 0,
+        qty: Number(c.qty) || 1,
+        img: img || 'https://studypack.taleemihub.com/assets/images/studypack_logo.png'
+      };
+    });
 
     const orderData = {
       id: orderId,
